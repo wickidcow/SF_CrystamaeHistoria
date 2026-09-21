@@ -83,7 +83,7 @@ public class ChroniclerPanelCache extends AbstractCache {
 
         ArmourStandUtils.panelAnimationReset(armourStand, blockMenu.getBlock());
         animation = new FloatingHeadAnimation(armourStand);
-        animation.runTaskTimer(CrystamaeHistoria.getInstance(), 0, FloatingHeadAnimation.SPEED);
+        animation.start();
     }
 
     @ParametersAreNonnullByDefault
