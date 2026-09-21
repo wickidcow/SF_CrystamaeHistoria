@@ -50,7 +50,6 @@
             <relocation><pattern>io.github.mooy1.infinitylib</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.infinitylib</shadedPattern></relocation>
             <relocation><pattern>org.bstats</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.bstats</shadedPattern></relocation>
             <relocation><pattern>de.slikey</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.effectlib</shadedPattern></relocation>
-            <relocation><pattern>com.jeff_media.morepersistentdatatypes</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.morepersistentdatatypes</shadedPattern></relocation>
           </relocations>
           <filters>
             <filter><artifact>*:*</artifact><excludes><exclude>META-INF/*.SF</exclude><exclude>META-INF/*.RSA</exclude><exclude>META-INF/*.DSA</exclude></excludes></filter>
@@ -67,7 +66,6 @@
     <dependency><groupId>org.bstats</groupId><artifactId>bstats-bukkit</artifactId><version>3.2.1</version></dependency>
     <dependency><groupId>com.google.code.findbugs</groupId><artifactId>annotations</artifactId><version>3.0.1u2</version></dependency>
     <dependency><groupId>org.projectlombok</groupId><artifactId>lombok</artifactId><version>1.18.38</version><scope>provided</scope></dependency>
-    <dependency><groupId>de.jeff_media</groupId><artifactId>MorePersistentDataTypes</artifactId><version>2.4.0</version></dependency>
     <dependency><groupId>com.github.TheBusyBiscuit</groupId><artifactId>ExoticGarden</artifactId><version>a2c4b6d</version><scope>provided</scope></dependency>
     <dependency><groupId>com.gmail.nossr50.mcMMO</groupId><artifactId>mcMMO</artifactId><version>2.1.217</version><scope>provided</scope><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency>
     <dependency><groupId>com.elmakers.mine.bukkit</groupId><artifactId>EffectLib</artifactId><version>9.4</version></dependency>
