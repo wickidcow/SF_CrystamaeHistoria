@@ -40,7 +40,8 @@ public class SupportedPluginManager {
 
     public SupportedPluginManager() {
         instance = this;
-        Bukkit.getScheduler().runTaskLater(CrystamaeHistoria.instance(), this::postSetup, 1);
+        CrystamaeHistoria.getInstance().getServer().getGlobalRegionScheduler()
+            .runDelayed(CrystamaeHistoria.getInstance(), task -> postSetup(), 1L);
         this.netheopoiesis = Bukkit.getPluginManager().isPluginEnabled("Netheopoiesis");
     }
 
