@@ -118,7 +118,7 @@ public abstract class Spell {
 
         final SpellTickRunnable ticker = new SpellTickRunnable(castInformation, tickAmount);
         CrystamaeHistoria.getSpellMemory().getTickingCastables().put(ticker, tickAmount);
-        ticker.runTaskTimer(CrystamaeHistoria.getInstance(), 0, period);
+        ticker.start(period);
     }
 
     @ParametersAreNonnullByDefault
