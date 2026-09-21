@@ -14,17 +14,14 @@
     <maven.compiler.release>21</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <paper.version>1.21.11-R0.1-SNAPSHOT</paper.version>
-    <slimefun.version>4.1.58</slimefun.version>
+    <slimefun.version>2025.1.2</slimefun.version>
   </properties>
 
   <repositories>
     <repository><id>papermc</id><url>https://repo.papermc.io/repository/maven-public/</url></repository>
-    <repository><id>slimefun-legacy-releases</id><url>https://maven.norain.city/releases</url></repository>
-    <repository><id>slimefun-legacy-snapshots</id><url>https://maven.norain.city/snapshots</url></repository>
     <repository><id>jitpack.io</id><url>https://jitpack.io</url></repository>
     <repository><id>mcmmo-repo</id><url>https://nexus.neetgames.com/repository/maven-public</url></repository>
     <repository><id>jeff-media-public</id><url>https://hub.jeff-media.com/nexus/repository/jeff-media-public/</url></repository>
-    <repository><id>sefi-central</id><url>https://sefiraat.jfrog.io/artifactory/default-maven-local</url></repository>
     <repository><id>bg-repo</id><url>https://repo.bg-software.com/repository/api/</url></repository>
     <repository><id>rosewood-repo</id><url>https://repo.rosewooddev.io/repository/public/</url></repository>
   </repositories>
@@ -66,14 +63,13 @@
 
   <dependencies>
     <dependency><groupId>io.papermc.paper</groupId><artifactId>paper-api</artifactId><version>${paper.version}</version><scope>provided</scope></dependency>
-    <dependency><groupId>com.github.slimefun</groupId><artifactId>Slimefun</artifactId><version>${slimefun.version}</version><scope>provided</scope></dependency>
+    <dependency><groupId>com.github.SlimefunGuguProject</groupId><artifactId>Slimefun4</artifactId><version>${slimefun.version}</version><scope>provided</scope></dependency>
     <dependency><groupId>org.bstats</groupId><artifactId>bstats-bukkit</artifactId><version>3.2.1</version></dependency>
     <dependency><groupId>com.google.code.findbugs</groupId><artifactId>annotations</artifactId><version>3.0.1u2</version></dependency>
     <dependency><groupId>org.projectlombok</groupId><artifactId>lombok</artifactId><version>1.18.38</version><scope>provided</scope></dependency>
     <dependency><groupId>de.jeff_media</groupId><artifactId>MorePersistentDataTypes</artifactId><version>2.4.0</version></dependency>
     <dependency><groupId>com.github.TheBusyBiscuit</groupId><artifactId>ExoticGarden</artifactId><version>a2c4b6d</version><scope>provided</scope></dependency>
     <dependency><groupId>com.gmail.nossr50.mcMMO</groupId><artifactId>mcMMO</artifactId><version>2.1.217</version><scope>provided</scope><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency>
-    <dependency><groupId>io.github.sefiraat</groupId><artifactId>networks</artifactId><version>MODIFIED_1.0.7</version><scope>provided</scope></dependency>
     <dependency><groupId>com.elmakers.mine.bukkit</groupId><artifactId>EffectLib</artifactId><version>9.4</version></dependency>
     <dependency><groupId>com.bgsoftware</groupId><artifactId>WildStackerAPI</artifactId><version>2022.6</version><scope>provided</scope></dependency>
     <dependency><groupId>dev.rosewood</groupId><artifactId>rosestacker</artifactId><version>1.5.1</version><scope>provided</scope></dependency>
