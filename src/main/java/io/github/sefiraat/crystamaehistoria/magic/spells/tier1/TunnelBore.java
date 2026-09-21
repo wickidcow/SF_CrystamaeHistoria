@@ -51,7 +51,7 @@ public class TunnelBore extends Spell {
             }
         );
         TunnelBoreRunnable runnable = new TunnelBoreRunnable(bore, range, caster, range * 20);
-        runnable.runTaskTimer(CrystamaeHistoria.getInstance(), 0, 1);
+        runnable.start();
     }
 
     @Nonnull
