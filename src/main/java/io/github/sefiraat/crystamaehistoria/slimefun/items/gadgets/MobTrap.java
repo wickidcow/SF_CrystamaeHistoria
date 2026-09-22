@@ -60,7 +60,12 @@ public class MobTrap extends TickingBlockNoGui {
             if (itemStack.getType() == Material.POTION && optionalBlock.isPresent()) {
                 final Block block = optionalBlock.get();
                 final PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
-                final PotionEffectType type = potionMeta.getBasePotionData().getType().getEffectType();
+                final PotionEffectType type = potionMeta.hasBasePotionType()
+                    ? potionMeta.getBasePotionType().getPotionEffects().stream()
+                        .findFirst()
+                        .map(PotionEffect::getType)
+                        .orElse(null)
+                    : null;
                 if (type != null) {
                     BlockStorage.addBlockInfo(block, "POT_EFF", type.getName());
                     potionEffectTypeMap.put(block.getLocation(), type);
