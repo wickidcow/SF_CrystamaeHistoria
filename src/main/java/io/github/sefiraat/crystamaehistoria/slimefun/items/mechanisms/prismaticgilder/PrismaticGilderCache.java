@@ -13,7 +13,7 @@ import io.github.sefiraat.crystamaehistoria.utils.ParticleUtils;
 import io.github.sefiraat.crystamaehistoria.utils.StoryUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import lombok.Getter;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -44,7 +44,7 @@ public class PrismaticGilderCache extends AbstractCache {
         super(blockMenu);
         this.maxVolume = maxVolume;
 
-        final String activePlayerString = BlockStorage.getLocationInfo(blockMenu.getLocation(), Keys.BS_CP_ACTIVE_PLAYER);
+        final String activePlayerString = StorageCacheUtils.getData(blockMenu.getLocation(), Keys.BS_CP_ACTIVE_PLAYER);
         if (activePlayerString != null) {
             this.activePlayer = UUID.fromString(activePlayerString);
         }
@@ -152,7 +152,7 @@ public class PrismaticGilderCache extends AbstractCache {
     }
 
     public void syncBlock() {
-        BlockStorage.addBlockInfo(blockMenu.getBlock(), AMOUNT, String.valueOf(this.fillAmount));
+        StorageCacheUtils.setData(blockMenu.getLocation(), AMOUNT, String.valueOf(this.fillAmount));
     }
 
     public int getFillAmount() {
