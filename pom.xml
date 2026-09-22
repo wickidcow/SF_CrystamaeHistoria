@@ -60,7 +60,7 @@
             <relocation><pattern>io.github.mooy1.infinitylib</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.infinitylib</shadedPattern></relocation>
             <relocation><pattern>org.bstats</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.bstats</shadedPattern></relocation>
             <relocation><pattern>de.slikey</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.effectlib</shadedPattern></relocation>
-            <relocation><pattern>de.jeff_media.morepersistentdatatypes</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.morepersistentdatatypes</shadedPattern></relocation>
+            <relocation><pattern>com.jeff_media.morepersistentdatatypes</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.morepersistentdatatypes</shadedPattern></relocation>
           </relocations>
           <filters>
             <filter><artifact>*:*</artifact><excludes><exclude>META-INF/*.SF</exclude><exclude>META-INF/*.RSA</exclude><exclude>META-INF/*.DSA</exclude></excludes></filter>
