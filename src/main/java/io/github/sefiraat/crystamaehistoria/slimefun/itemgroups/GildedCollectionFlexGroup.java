@@ -29,6 +29,7 @@ import java.util.List;
 /**
  * @noinspection deprecation
  */
+@SuppressWarnings("deprecation")
 public class GildedCollectionFlexGroup extends FlexItemGroup {
 
     private static final int PAGE_SIZE = 36;
