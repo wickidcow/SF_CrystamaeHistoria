@@ -52,7 +52,7 @@ public class BatteringRamGoal extends AbstractGoal<Goat> {
             final BlockData blockData = block.getBlockData();
             if (GeneralUtils.blockCanBeBroken(this.owner, block)) {
                 block.setType(Material.AIR);
-                final FallingBlock fallingBlock = block.getWorld().spawnFallingBlock(block.getLocation(), blockData);
+                final FallingBlock fallingBlock = block.getWorld().spawn(block.getLocation(), FallingBlock.class, entity -> entity.setBlockData(blockData));
                 GeneralUtils.pushEntity(this.owner, self.getLocation(), fallingBlock, 0.5);
             }
         }
