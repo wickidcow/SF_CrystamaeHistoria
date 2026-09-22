@@ -1,5 +1,6 @@
 package io.github.sefiraat.crystamaehistoria.listeners;
 
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.sefiraat.crystamaehistoria.magic.DisplayItem;
 import io.github.sefiraat.crystamaehistoria.slimefun.Materials;
 import io.github.sefiraat.crystamaehistoria.slimefun.items.gadgets.ExpCollector;
@@ -12,7 +13,6 @@ import io.github.sefiraat.crystamaehistoria.utils.ParticleUtils;
 import io.github.sefiraat.crystamaehistoria.utils.Skulls;
 import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -44,7 +44,7 @@ public class RefractingLensListener implements Listener {
         ) {
             e.setCancelled(true);
             GeneralUtils.putOnCooldown(player.getInventory().getItemInMainHand(), 3);
-            SlimefunItem item = BlockStorage.check(block);
+            SlimefunItem item = StorageCacheUtils.getSlimefunItem(block.getLocation());
             if (item instanceof LiquefactionBasin) {
                 liquefactionBasin(player, item, block);
             } else if (item instanceof ExpCollector) {
