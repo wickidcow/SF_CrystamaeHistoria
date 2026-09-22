@@ -16,6 +16,7 @@ softdepend:
   - RoseStacker
   - WildStacker
   - Netheopoiesis
+  - Networks
 commands:
   crystamaehistoria:
     description: Main Crystamae Historia command.
