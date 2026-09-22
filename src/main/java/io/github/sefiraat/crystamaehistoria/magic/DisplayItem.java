@@ -35,12 +35,19 @@ public class DisplayItem {
     }
 
     public void kill() {
-        if (this.item.isValid()) {
-            if (this.onRemove != null) {
-                this.onRemove.accept(this.item);
-            }
-            this.item.remove();
-        }
+        this.item.getScheduler().execute(
+            CrystamaeHistoria.getInstance(),
+            () -> {
+                if (this.item.isValid()) {
+                    if (this.onRemove != null) {
+                        this.onRemove.accept(this.item);
+                    }
+                    this.item.remove();
+                }
+            },
+            null,
+            1L
+        );
     }
 
 }
