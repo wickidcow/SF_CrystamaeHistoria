@@ -8,9 +8,9 @@ import io.github.sefiraat.crystamaehistoria.CrystamaeHistoria;
 import io.github.thebusybiscuit.exoticgarden.items.BonemealableItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
 import lombok.Getter;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -94,8 +94,7 @@ public class SupportedPluginManager {
     @ParametersAreNonnullByDefault
     public boolean isExoticGardenPlant(Block block) {
         return exoticGarden
-            && BlockStorage.hasBlockInfo(block)
-            && BlockStorage.check(block) instanceof BonemealableItem;
+            && StorageCacheUtils.getSlimefunItem(block.getLocation()) instanceof BonemealableItem;
     }
 
     /**
@@ -108,8 +107,8 @@ public class SupportedPluginManager {
     @Nullable
     @ParametersAreNonnullByDefault
     public SlimefunItem getExoticGardenPlant(Block block) {
-        if (exoticGarden && BlockStorage.hasBlockInfo(block)) {
-            SlimefunItem slimefunItem = BlockStorage.check(block);
+        if (exoticGarden) {
+            final SlimefunItem slimefunItem = StorageCacheUtils.getSlimefunItem(block.getLocation());
             if (slimefunItem instanceof BonemealableItem) {
                 return slimefunItem;
             }
