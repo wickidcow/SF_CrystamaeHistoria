@@ -9,7 +9,7 @@ import io.github.sefiraat.crystamaehistoria.utils.TextUtils;
 import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -46,7 +46,7 @@ public class InstancePlate {
             ThemeType.CLICK_INFO.getColor() + "Magic Framework : " + ThemeType.NOTICE.getColor() + magic,
             ThemeType.CLICK_INFO.getColor() + "Stored Crysta : " + ThemeType.NOTICE.getColor() + crysta
         };
-        final ChatColor passiveColor = ThemeType.PASSIVE.getColor();
+        final String passiveColor = ThemeType.PASSIVE.getColor();
         final List<String> finalLore = new ArrayList<>();
         final ItemMeta itemMeta = itemStack.getItemMeta();
 
@@ -57,7 +57,7 @@ public class InstancePlate {
         finalLore.add("");
         finalLore.add(ThemeType.applyThemeToString(ThemeType.CLICK_INFO, ThemeType.CRAFTING.getLoreLine()));
 
-        itemMeta.setLore(finalLore);
+        itemMeta.lore(finalLore.stream().map(LegacyComponentSerializer.legacySection()::deserialize).toList());
         itemStack.setItemMeta(itemMeta);
     }
 
