@@ -322,7 +322,8 @@ public class Displacer extends LimitedUseItem {
     }
 
     public static void convertBlock(@Nonnull Block block) {
-        if (StorageCacheUtils.getSlimefunItem(block.getLocation()) != null) {
+        final var blockData = StorageCacheUtils.getBlock(block.getLocation());
+        if (blockData != null && SlimefunItem.getById(blockData.getSfId()) != null) {
             return;
         }
 
