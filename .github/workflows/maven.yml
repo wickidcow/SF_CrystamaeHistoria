@@ -13,6 +13,7 @@ permissions:
 env:
   VERSION: "1.0.0"
   OUTPUT_NAME: "SF_CrystamaeHistoria1.0.0.jar"
+  MAVEN_OPTS: "--sun-misc-unsafe-memory-access=allow"
 
 concurrency:
   group: crystamaehistoria-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
