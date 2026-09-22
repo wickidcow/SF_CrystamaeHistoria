@@ -7,6 +7,7 @@ import io.github.sefiraat.crystamaehistoria.utils.GeneralUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,7 +29,7 @@ public class ThaumaturgicSaltsListener implements Listener {
             && slimefunItem instanceof ThaumaturgicSalt
         ) {
             e.setCancelled(true);
-            SlimefunItem item = StorageCacheUtils.getSlimefunItem(block.getLocation());
+            SlimefunItem item = SlimefunStorageUtils.getSlimefunItem(block.getLocation());
             if (item instanceof LiquefactionBasin) {
                 liquefactionBasin(player, heldStack, item, block);
             }
