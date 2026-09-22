@@ -7,6 +7,8 @@ import io.github.thebusybiscuit.slimefun4.implementation.items.LimitedUseItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 import io.github.thebusybiscuit.slimefun4.utils.LoreBuilder;
 import io.github.thebusybiscuit.slimefun4.utils.PatternUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -14,7 +16,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Collections;
 import java.util.List;
 
 public abstract class RefillableUseItem extends LimitedUseItem {
@@ -44,21 +45,21 @@ public abstract class RefillableUseItem extends LimitedUseItem {
     // Just taken from super class
     @ParametersAreNonnullByDefault
     protected void updateLore(ItemStack item, ItemMeta meta, int usesLeft) {
-        List<String> lore = meta.getLore();
+        final LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
+        List<Component> lore = meta.lore();
 
-        String newLine = ChatColors.color(LoreBuilder.usesLeft(usesLeft));
+        Component newLine = serializer.deserialize(ChatColors.color(LoreBuilder.usesLeft(usesLeft)));
         if (lore != null && !lore.isEmpty()) {
-            // find the correct line
             for (int i = 0; i < lore.size(); i++) {
-                if (PatternUtils.USES_LEFT_LORE.matcher(lore.get(i)).matches()) {
+                if (PatternUtils.USES_LEFT_LORE.matcher(serializer.serialize(lore.get(i))).matches()) {
                     lore.set(i, newLine);
-                    meta.setLore(lore);
+                    meta.lore(lore);
                     item.setItemMeta(meta);
                     return;
                 }
             }
         } else {
-            meta.setLore(Collections.singletonList(newLine));
+            meta.lore(List.of(newLine));
             item.setItemMeta(meta);
         }
     }
