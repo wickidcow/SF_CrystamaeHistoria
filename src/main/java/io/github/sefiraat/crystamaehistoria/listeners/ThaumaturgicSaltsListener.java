@@ -1,12 +1,12 @@
 package io.github.sefiraat.crystamaehistoria.listeners;
 
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.sefiraat.crystamaehistoria.slimefun.items.mechanisms.liquefactionbasin.LiquefactionBasin;
 import io.github.sefiraat.crystamaehistoria.slimefun.items.mechanisms.liquefactionbasin.LiquefactionBasinCache;
 import io.github.sefiraat.crystamaehistoria.slimefun.items.tools.ThaumaturgicSalt;
 import io.github.sefiraat.crystamaehistoria.utils.GeneralUtils;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,7 +28,7 @@ public class ThaumaturgicSaltsListener implements Listener {
             && slimefunItem instanceof ThaumaturgicSalt
         ) {
             e.setCancelled(true);
-            SlimefunItem item = BlockStorage.check(block);
+            SlimefunItem item = StorageCacheUtils.getSlimefunItem(block.getLocation());
             if (item instanceof LiquefactionBasin) {
                 liquefactionBasin(player, heldStack, item, block);
             }
