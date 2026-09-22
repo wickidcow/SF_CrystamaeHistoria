@@ -2,14 +2,12 @@ package io.github.sefiraat.crystamaehistoria.slimefun.items.artistic;
 
 import lombok.Getter;
 import net.kyori.adventure.text.format.TextColor;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Axolotl;
 import org.bukkit.entity.Parrot;
 
 import javax.annotation.Nullable;
-import java.awt.Color;
 
 public enum PaintProfile {
 
@@ -294,14 +292,6 @@ public enum PaintProfile {
         this.dyeColor = dyeColor;
     }
 
-    public ChatColor getChatColor() {
-        Color color = new Color(
-            dyeColor.getColor().getRed(),
-            dyeColor.getColor().getGreen(),
-            dyeColor.getColor().getBlue()
-        );
-        return ChatColor.of(color);
-    }
 
     public TextColor getTextColor() {
         return TextColor.color(
