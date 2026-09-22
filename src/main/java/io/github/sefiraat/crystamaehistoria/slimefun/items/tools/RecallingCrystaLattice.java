@@ -87,7 +87,8 @@ public class RecallingCrystaLattice extends SlimefunItem {
         if (container.has(Keys.newKey("location"), DataType.LOCATION)) {
             final Location location = container.get(Keys.newKey("location"), DataType.LOCATION);
             final Block block = location.getBlock();
-            final SlimefunItem slimefunItem = StorageCacheUtils.getSlimefunItem(block.getLocation());
+            final var blockData = StorageCacheUtils.getBlock(block.getLocation());
+            final SlimefunItem slimefunItem = blockData == null ? null : SlimefunItem.getById(blockData.getSfId());
 
             if (slimefunItem instanceof Waystone
                 && GeneralUtils.hasPermission(event.getPlayer(), location, Interaction.PLACE_BLOCK)
