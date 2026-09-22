@@ -61,8 +61,9 @@ public class PoisonNova extends Spell {
                 castInformation.getStaveLevel() * 100,
                 castInformation.getStaveLevel()
             );
-            hit.addPotionEffect(potionEffect);
-            setLastDamageToCaster(hit, castInformation);
+            if (GeneralUtils.damageEntity(hit, castInformation.getCaster(), 0)) {
+                hit.addPotionEffect(potionEffect);
+            }
         }
     }
 
