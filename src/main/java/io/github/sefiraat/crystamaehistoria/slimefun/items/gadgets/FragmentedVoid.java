@@ -11,7 +11,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
@@ -63,7 +63,10 @@ public class FragmentedVoid extends SlimefunItem {
             public void tick(Block block, SlimefunItem slimefunItem, SlimefunBlockData config) {
                 final Location location = block.getLocation().clone().add(0.5, 0.5, 0.5);
                 final Collection<Item> itemsToConsume = location.getWorld().getNearbyEntitiesByType(Item.class, location, 1.25);
-                final BlockMenu blockMenu = BlockStorage.getInventory(block);
+                final BlockMenu blockMenu = config.getBlockMenu();
+                if (blockMenu == null) {
+                    return;
+                }
 
                 for (Item item : itemsToConsume) {
                     if (item.getPickupDelay() <= 0 && !SlimefunUtils.hasNoPickupFlag(item)) {
@@ -102,8 +105,10 @@ public class FragmentedVoid extends SlimefunItem {
         return new BlockBreakHandler(false, false) {
             @Override
             public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
-                final BlockMenu blockMenu = BlockStorage.getInventory(e.getBlock());
-                blockMenu.dropItems(blockMenu.getLocation(), OUTPUT_SLOTS);
+                final BlockMenu blockMenu = SlimefunStorageUtils.getMenu(e.getBlock().getLocation());
+                if (blockMenu != null) {
+                    blockMenu.dropItems(blockMenu.getLocation(), OUTPUT_SLOTS);
+                }
             }
         };
     }
