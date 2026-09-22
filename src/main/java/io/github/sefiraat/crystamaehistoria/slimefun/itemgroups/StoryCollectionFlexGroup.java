@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 /**
  * @noinspection deprecation
  */
+@SuppressWarnings("deprecation")
 public class StoryCollectionFlexGroup extends FlexItemGroup {
 
     private static final int PAGE_SIZE = 36;
