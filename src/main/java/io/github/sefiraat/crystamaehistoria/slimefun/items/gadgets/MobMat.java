@@ -9,7 +9,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import lombok.Getter;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -56,7 +56,7 @@ public class MobMat extends TickingBlockNoGui {
     protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         blockOwnerMap.put(
             block.getLocation(),
-            UUID.fromString(BlockStorage.getLocationInfo(block.getLocation(), "CH_UUID"))
+            UUID.fromString(SlimefunStorageUtils.getData(block.getLocation(), "CH_UUID"))
         );
     }
 
@@ -87,12 +87,13 @@ public class MobMat extends TickingBlockNoGui {
     @Override
     protected void onPlace(@Nonnull BlockPlaceEvent event) {
         final UUID uuid = event.getPlayer().getUniqueId();
-        BlockStorage.addBlockInfo(event.getBlock(), "CH_UUID", uuid.toString());
+        SlimefunStorageUtils.setData(event.getBlock().getLocation(), "CH_UUID", uuid.toString());
         blockOwnerMap.put(event.getBlock().getLocation(), uuid);
     }
 
     @Override
     protected void onBreak(@Nonnull BlockBreakEvent blockBreakEvent, @Nonnull ItemStack itemStack, @Nonnull List<ItemStack> list) {
-        BlockStorage.clearBlockInfo(blockBreakEvent.getBlock());
+        SlimefunStorageUtils.removeData(blockBreakEvent.getBlock().getLocation(), "CH_UUID");
+        blockOwnerMap.remove(blockBreakEvent.getBlock().getLocation());
     }
 }
