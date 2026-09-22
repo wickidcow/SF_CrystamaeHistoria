@@ -40,9 +40,9 @@ public class SupportedPluginManager {
 
     public SupportedPluginManager() {
         instance = this;
+        postSetup();
         CrystamaeHistoria.getInstance().getServer().getGlobalRegionScheduler()
             .runDelayed(CrystamaeHistoria.getInstance(), task -> postSetup(), 1L);
-        this.netheopoiesis = Bukkit.getPluginManager().isPluginEnabled("Netheopoiesis");
     }
 
     private void postSetup() {
@@ -53,6 +53,7 @@ public class SupportedPluginManager {
         this.networks = Bukkit.getPluginManager().isPluginEnabled("Networks");
         this.wildStacker = Bukkit.getPluginManager().isPluginEnabled("WildStacker");
         this.roseStacker = Bukkit.getPluginManager().isPluginEnabled("RoseStacker");
+        this.netheopoiesis = Bukkit.getPluginManager().isPluginEnabled("Netheopoiesis");
         if (this.roseStacker) {
             this.roseStackerAPI = RoseStackerAPI.getInstance();
         }
