@@ -602,7 +602,7 @@ public class Tools {
                 CrystaRecipeTypes.LIQUEFACTION_CRAFTING,
                 cargoCoverRecipe.getDisplayRecipe(),
                 CrystaStacks.CARGO_COVER.asQuantity(8),
-                CargoConnectorNode.class
+                List.of(CargoConnectorNode.class)
             );
 
             // Energy Net Cover
@@ -618,7 +618,7 @@ public class Tools {
                 CrystaRecipeTypes.LIQUEFACTION_CRAFTING,
                 energyNetCoverRecipe.getDisplayRecipe(),
                 CrystaStacks.ENERGY_NET_COVER.asQuantity(8),
-                EnergyConnector.class
+                List.of(EnergyConnector.class)
             );
 
 
@@ -646,8 +646,8 @@ public class Tools {
                     CrystaRecipeTypes.LIQUEFACTION_CRAFTING,
                     networksCoverRecipe.getDisplayRecipe(),
                     CrystaStacks.NETWORKS_COVER.asQuantity(8),
-                    "NTW_BRIDGE",
-                    "NTW_MONITOR"
+                    List.of("NTW_BRIDGE", "NTW_MONITOR"),
+                    true
                 );
 
                 networkNodeCover.register(plugin);
