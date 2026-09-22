@@ -1,5 +1,7 @@
 package io.github.sefiraat.crystamaehistoria.slimefun.items.mechanisms.liquefactionbasin;
 
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import de.slikey.effectlib.effect.SphereEffect;
 import io.github.sefiraat.crystamaehistoria.CrystamaeHistoria;
 import io.github.sefiraat.crystamaehistoria.magic.SpellType;
@@ -23,7 +25,6 @@ import io.github.sefiraat.crystamaehistoria.utils.datatypes.PersistentSatchelIns
 import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.ChatColor;
@@ -183,15 +184,19 @@ public class LiquefactionBasinCache extends DisplayStandHolder {
     }
 
     private void clearBlockStorage() {
-        final Config c = BlockStorage.getLocationInfo(blockMenu.getLocation());
+        final SlimefunBlockData data = StorageCacheUtils.getBlock(blockMenu.getLocation());
+        if (data == null) {
+            return;
+        }
+
         final List<String> keys = new ArrayList<>();
-        for (String key : c.getKeys()) {
+        for (String key : data.getDataKeys()) {
             if (key.startsWith(CH_LEVEL_PREFIX)) {
                 keys.add(key);
             }
         }
         for (String key : keys) {
-            BlockStorage.addBlockInfo(blockMenu.getLocation(), key, null);
+            data.removeData(key);
         }
     }
 
