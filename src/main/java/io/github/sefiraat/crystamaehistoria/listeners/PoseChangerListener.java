@@ -12,6 +12,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -35,6 +36,7 @@ public class PoseChangerListener implements Listener {
 
     private static final String IMBUED_ONLY_MESSAGE = ThemeType.WARNING.getColor() + "This can only be done to an Imbued Armorstand";
     private static final double STEP_AMOUNT = 0.01;
+    private static final LegacyComponentSerializer LEGACY = LegacyComponentSerializer.legacySection();
 
     private final NamespacedKey poseKey = Keys.newKey("pose_type");
     private final NamespacedKey changeKey = Keys.newKey("change_Type");
@@ -136,12 +138,14 @@ public class PoseChangerListener implements Listener {
                 ThemeType.CLICK_INFO.getColor(),
                 nextType
             );
-            final List<String> lore = itemMeta.getLore();
+            final List<Component> lore = itemMeta.lore();
 
-            lore.set(lore.size() - 4, message);
-            itemMeta.setLore(lore);
+            if (lore != null) {
+                lore.set(lore.size() - 4, LEGACY.deserialize(message));
+                itemMeta.lore(lore);
+            }
             PersistentDataAPI.setString(itemMeta, poseKey, nextType.toString());
-            player.sendActionBar(Component.text(message));
+            player.sendActionBar(LEGACY.deserialize(message));
         } else {
             final ChangeType changeType = ChangeType.valueOf(PersistentDataAPI.getString(itemMeta, changeKey, "RESET"));
             final ChangeType nextType = changeType.getNext();
@@ -151,11 +155,13 @@ public class PoseChangerListener implements Listener {
                 ThemeType.CLICK_INFO.getColor(),
                 nextType
             );
-            final List<String> lore = itemMeta.getLore();
-            lore.set(lore.size() - 3, message);
-            itemMeta.setLore(lore);
+            final List<Component> lore = itemMeta.lore();
+            if (lore != null) {
+                lore.set(lore.size() - 3, LEGACY.deserialize(message));
+                itemMeta.lore(lore);
+            }
             PersistentDataAPI.setString(itemMeta, changeKey, nextType.toString());
-            player.sendActionBar(Component.text(message));
+            player.sendActionBar(LEGACY.deserialize(message));
         }
 
         heldItem.setItemMeta(itemMeta);
