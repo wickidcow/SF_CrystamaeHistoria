@@ -49,7 +49,7 @@ jobs:
         run: mvn --batch-mode --no-transfer-progress -DskipTests "-Dpaper.version=[26.2.build,26.3)" clean compile
 
       - name: Verify Paper/Purpur/Leaf 26.3 compilation
-        run: mvn --batch-mode --no-transfer-progress -DskipTests -Dpaper.version=26.3-rc-3.build.1-alpha clean compile
+        run: mvn --batch-mode --no-transfer-progress -DskipTests "-Dpaper.version=[26.3.build,26.4)" clean compile
 
       - name: Build universal release JAR
         run: mvn --batch-mode --no-transfer-progress -DskipTests -Dpaper.version=1.21.11-R0.1-SNAPSHOT clean package
