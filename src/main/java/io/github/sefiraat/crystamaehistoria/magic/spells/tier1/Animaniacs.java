@@ -9,6 +9,7 @@ import io.github.sefiraat.crystamaehistoria.stories.definition.StoryType;
 import io.github.sefiraat.crystamaehistoria.utils.GeneralUtils;
 import io.github.sefiraat.crystamaehistoria.utils.SpellUtils;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -79,10 +80,10 @@ public class Animaniacs extends Spell {
                 && GeneralUtils.hasPermission(castInformation.getCaster(), entityLocation, Interaction.INTERACT_ENTITY)
             ) {
                 final EntityType convertTo = CONVERTIBLE_LIST.get(ThreadLocalRandom.current().nextInt(CONVERTIBLE_LIST.size()));
-                final String name = entity.getCustomName();
+                final Component name = entity.customName();
                 entity.remove();
                 final Entity newEntity = entityLocation.getWorld().spawnEntity(entityLocation, convertTo, true);
-                newEntity.setCustomName(name);
+                newEntity.customName(name);
             }
         }
     }
