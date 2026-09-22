@@ -4,9 +4,9 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -66,9 +66,9 @@ public class MysteriousTicker extends SlimefunItem {
             }
 
             @Override
-            public void tick(Block block, SlimefunItem slimefunItem, Config config) {
+            public void tick(Block block, SlimefunItem slimefunItem, SlimefunBlockData config) {
                 if (block.isEmpty()) {
-                    BlockStorage.clearBlockInfo(block.getLocation());
+                    SlimefunStorageUtils.removeBlock(block.getLocation());
                 }
                 Integer currentTick = tickMap.get(block.getLocation());
                 if (currentTick == null) {

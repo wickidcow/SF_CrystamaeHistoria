@@ -9,7 +9,8 @@ import io.github.sefiraat.crystamaehistoria.utils.datatypes.DataTypeMethods;
 import io.github.sefiraat.crystamaehistoria.utils.datatypes.PersistentStaveDataType;
 import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import lombok.Getter;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -45,7 +46,7 @@ public class InstanceStave {
             "A stave with the ability to hold",
             "magically charged plates.",
         };
-        final ChatColor passiveColor = ThemeType.PASSIVE.getColor();
+        final String passiveColor = ThemeType.PASSIVE.getColor();
         final List<String> finalLore = new ArrayList<>();
 
         for (String s : lore) {
@@ -66,7 +67,11 @@ public class InstanceStave {
         finalLore.add("");
         finalLore.add(ThemeType.applyThemeToString(ThemeType.CLICK_INFO, ThemeType.STAVE.getLoreLine()));
         final ItemMeta itemMeta = this.itemStack.getItemMeta();
-        itemMeta.setLore(finalLore);
+        itemMeta.lore(finalLore.stream()
+            .map(line -> LegacyComponentSerializer.legacySection()
+                .deserialize(line)
+                .decoration(TextDecoration.ITALIC, false))
+            .toList());
         this.itemStack.setItemMeta(itemMeta);
     }
 

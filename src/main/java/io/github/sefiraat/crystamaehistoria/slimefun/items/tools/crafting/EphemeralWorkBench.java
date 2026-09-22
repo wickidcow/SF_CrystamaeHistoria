@@ -92,6 +92,7 @@ public class EphemeralWorkBench extends SlimefunItem {
         RECIPES.put(input, output);
     }
 
+    @SuppressWarnings("deprecation") // Slimefun Legacy has not yet replaced the ChestMenu compatibility API.
     public class WorkBenchMenu extends ChestMenu {
 
         public WorkBenchMenu() {

@@ -79,10 +79,10 @@ public class Animaniacs extends Spell {
                 && GeneralUtils.hasPermission(castInformation.getCaster(), entityLocation, Interaction.INTERACT_ENTITY)
             ) {
                 final EntityType convertTo = CONVERTIBLE_LIST.get(ThreadLocalRandom.current().nextInt(CONVERTIBLE_LIST.size()));
-                final String name = entity.getCustomName();
+                final var name = entity.customName();
                 entity.remove();
                 final Entity newEntity = entityLocation.getWorld().spawnEntity(entityLocation, convertTo, true);
-                newEntity.setCustomName(name);
+                newEntity.customName(name);
             }
         }
     }

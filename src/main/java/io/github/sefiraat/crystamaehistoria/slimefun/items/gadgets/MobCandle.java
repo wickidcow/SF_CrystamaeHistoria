@@ -8,8 +8,8 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -43,8 +43,8 @@ public class MobCandle extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
-        Long expiry = Long.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "EXPIRY"));
+    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
+        Long expiry = Long.valueOf(SlimefunStorageUtils.getData(block.getLocation(), "EXPIRY"));
         expiryMap.put(block.getLocation(), expiry);
         Candle candle = (Candle) block.getBlockData();
         candle.setLit(true);
@@ -57,7 +57,7 @@ public class MobCandle extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         Location location = block.getLocation();
         BoundingBox boundingBox = new BoundingBox(
             location.getX() - radius,
@@ -70,7 +70,8 @@ public class MobCandle extends TickingBlockNoGui {
         CrystamaeHistoria.getSpellMemory().getNoSpawningAreas().put(boundingBox, System.currentTimeMillis() + 2000);
         Long expiry = expiryMap.get(block.getLocation());
         if (expiry < System.currentTimeMillis()) {
-            BlockStorage.clearBlockInfo(block);
+            SlimefunStorageUtils.removeBlock(block.getLocation());
+            expiryMap.remove(block.getLocation());
             block.setType(Material.AIR);
             ParticleUtils.displayParticleEffect(
                 block.getLocation().add(0.5, 0.5, 0.5),
@@ -84,12 +85,13 @@ public class MobCandle extends TickingBlockNoGui {
     @Override
     protected void onPlace(@Nonnull BlockPlaceEvent event) {
         Long expiry = System.currentTimeMillis() + (duration * 1000L);
-        BlockStorage.addBlockInfo(event.getBlock(), "EXPIRY", String.valueOf(expiry));
+        SlimefunStorageUtils.setData(event.getBlock().getLocation(), "EXPIRY", String.valueOf(expiry));
         expiryMap.put(event.getBlock().getLocation(), expiry);
     }
 
     @Override
     protected void onBreak(@Nonnull BlockBreakEvent blockBreakEvent, @Nonnull ItemStack itemStack, @Nonnull List<ItemStack> list) {
-        BlockStorage.clearBlockInfo(blockBreakEvent.getBlock());
+        SlimefunStorageUtils.removeData(blockBreakEvent.getBlock().getLocation(), "EXPIRY");
+        expiryMap.remove(blockBreakEvent.getBlock().getLocation());
     }
 }

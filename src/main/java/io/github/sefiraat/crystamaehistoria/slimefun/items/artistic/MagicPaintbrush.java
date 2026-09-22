@@ -35,8 +35,7 @@ public interface MagicPaintbrush {
         }
         potionMeta.addItemFlags(
             ItemFlag.HIDE_ENCHANTS,
-            ItemFlag.HIDE_ATTRIBUTES,
-            ItemFlag.HIDE_ADDITIONAL_TOOLTIP
+            ItemFlag.HIDE_ATTRIBUTES
         );
         itemStack.setItemMeta(potionMeta);
         return itemStack;
@@ -117,7 +116,7 @@ public interface MagicPaintbrush {
         ) {
             block.setType(profile.getMaterialConcrete());
             return true;
-        } else if (Tag.CARPETS.isTagged(material)
+        } else if (Tag.WOOL_CARPETS.isTagged(material)
             && block.getType() != profile.getMaterialCarpet()
         ) {
             block.setType(profile.getMaterialCarpet());

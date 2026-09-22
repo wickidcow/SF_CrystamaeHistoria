@@ -17,7 +17,7 @@ import io.github.sefiraat.crystamaehistoria.utils.datatypes.PersistentStoryChunk
 import io.github.thebusybiscuit.slimefun4.libraries.dough.blocks.BlockPosition;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
 import lombok.Getter;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Chunk;
 import org.bukkit.Color;
@@ -54,7 +54,7 @@ public class RealisationAltarCache extends AbstractCache {
         super(blockMenu);
         this.tier = tier;
 
-        final String activePlayerString = BlockStorage.getLocationInfo(blockMenu.getLocation(), Keys.BS_CP_ACTIVE_PLAYER);
+        final String activePlayerString = StorageCacheUtils.getData(blockMenu.getLocation(), Keys.BS_CP_ACTIVE_PLAYER);
         if (activePlayerString != null) {
             this.activePlayer = UUID.fromString(activePlayerString);
         }

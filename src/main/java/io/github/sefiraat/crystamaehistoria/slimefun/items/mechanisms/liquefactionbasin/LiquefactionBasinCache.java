@@ -23,10 +23,11 @@ import io.github.sefiraat.crystamaehistoria.utils.datatypes.PersistentSatchelIns
 import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -69,7 +70,7 @@ public class LiquefactionBasinCache extends DisplayStandHolder {
         super(blockMenu);
         this.maxVolume = maxVolume;
 
-        final String activePlayerString = BlockStorage.getLocationInfo(blockMenu.getLocation(), Keys.BS_CP_ACTIVE_PLAYER);
+        final String activePlayerString = StorageCacheUtils.getData(blockMenu.getLocation(), Keys.BS_CP_ACTIVE_PLAYER);
         if (activePlayerString != null) {
             this.activePlayer = UUID.fromString(activePlayerString);
         }
@@ -152,7 +153,8 @@ public class LiquefactionBasinCache extends DisplayStandHolder {
         int blue = 0;
 
         for (Map.Entry<StoryType, Integer> entry : contentMap.entrySet()) {
-            final Color color = ThemeType.getByType(entry.getKey()).getColor().getColor();
+            final var componentColor = ThemeType.getByType(entry.getKey()).getComponentColor();
+            final Color color = new Color(componentColor.red(), componentColor.green(), componentColor.blue());
             final int additionalAmount = entry.getValue();
             amount += additionalAmount;
             red += color.getRed() * additionalAmount;
@@ -183,15 +185,19 @@ public class LiquefactionBasinCache extends DisplayStandHolder {
     }
 
     private void clearBlockStorage() {
-        final Config c = BlockStorage.getLocationInfo(blockMenu.getLocation());
+        final SlimefunBlockData data = StorageCacheUtils.getBlock(blockMenu.getLocation());
+        if (data == null) {
+            return;
+        }
+
         final List<String> keys = new ArrayList<>();
-        for (String key : c.getKeys()) {
+        for (String key : data.getDataKeys()) {
             if (key.startsWith(CH_LEVEL_PREFIX)) {
                 keys.add(key);
             }
         }
         for (String key : keys) {
-            BlockStorage.addBlockInfo(blockMenu.getLocation(), key, null);
+            data.removeData(key);
         }
     }
 
@@ -206,7 +212,7 @@ public class LiquefactionBasinCache extends DisplayStandHolder {
 
     public void syncBlock() {
         for (Map.Entry<StoryType, Integer> e : contentMap.entrySet()) {
-            BlockStorage.addBlockInfo(blockMenu.getBlock(), CH_LEVEL_PREFIX + e.getKey(), String.valueOf(e.getValue()));
+            StorageCacheUtils.setData(blockMenu.getLocation(), CH_LEVEL_PREFIX + e.getKey(), String.valueOf(e.getValue()));
         }
     }
 
@@ -348,9 +354,13 @@ public class LiquefactionBasinCache extends DisplayStandHolder {
     }
 
     private boolean canCraftSatchel(ItemStack incomingItem) {
-        List<String> lore = incomingItem.getItemMeta().getLore();
-        for (String s : lore) {
-            if (s.equals(ChatColor.GRAY + "ID: <ID>")) {
+        List<Component> lore = incomingItem.getItemMeta().lore();
+        if (lore == null) {
+            return false;
+        }
+        final LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
+        for (Component line : lore) {
+            if (serializer.serialize(line).equals("§7ID: <ID>")) {
                 return true;
             }
         }

@@ -6,7 +6,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -64,7 +64,7 @@ public class CursedEarth extends SlimefunItem {
             }
 
             @Override
-            public void tick(Block block, SlimefunItem slimefunItem, Config config) {
+            public void tick(Block block, SlimefunItem slimefunItem, SlimefunBlockData config) {
                 final Location location = block.getLocation().add(0.5, 1.5, 0.5);
                 if (currentTick == ticksToSpawn) {
                     final Block blockA = block.getRelative(BlockFace.UP);

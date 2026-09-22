@@ -8,9 +8,6 @@ import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.blocks.BlockPosition;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nonnull;
@@ -88,13 +85,11 @@ public class Story {
     }
 
     public String getDisplayName() {
-        final TextComponent rarityComponent = new TextComponent(getDisplayRarity());
-        final TextComponent nameComponent = new TextComponent(this.id);
-
-        rarityComponent.setColor(ThemeType.getByRarity(this.rarity).getColor());
-        rarityComponent.setBold(true);
-        nameComponent.setColor(ThemeType.CLICK_INFO.getColor());
-        return BaseComponent.toLegacyText(rarityComponent, nameComponent);
+        return ThemeType.getByRarity(this.rarity).getColor()
+            + "§l"
+            + getDisplayRarity()
+            + ThemeType.CLICK_INFO.getColor()
+            + this.id;
     }
 
     public String getDisplayRarity() {
@@ -102,15 +97,11 @@ public class Story {
     }
 
     public List<String> getStoryLore() {
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
+        final String passive = ThemeType.PASSIVE.getColor();
         final List<String> l = new ArrayList<>();
 
         for (String s : storyStrings) {
-            final TextComponent line = new TextComponent(s);
-
-            line.setColor(passive);
-            line.setItalic(false);
-            l.add(BaseComponent.toLegacyText(line));
+            l.add(passive + s);
         }
         if (author != null) {
             l.add("");

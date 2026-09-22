@@ -7,7 +7,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +37,12 @@ public class AngelBlock extends SlimefunItem {
                 && GeneralUtils.hasPermission(e.getPlayer(), block, Interaction.PLACE_BLOCK)
             ) {
                 block.setType(e.getItem().getType());
-                BlockStorage.store(block, e.getItem());
+                final SlimefunItem slimefunItem = SlimefunItem.getByItem(e.getItem());
+                if (slimefunItem != null) {
+                    Slimefun.getDatabaseManager()
+                        .getBlockDataController()
+                        .createBlock(block.getLocation(), slimefunItem.getId());
+                }
                 e.getItem().setAmount(e.getItem().getAmount() - 1);
             }
 

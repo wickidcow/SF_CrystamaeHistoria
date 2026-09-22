@@ -70,7 +70,11 @@ public class Cascada extends Spell {
 
         for (Block block : blocks) {
             final BlockData blockData = block.getBlockData();
-            final Entity entity = block.getWorld().spawnFallingBlock(block.getLocation().add(0.5, 0.5, 0.5), blockData);
+            final Entity entity = block.getWorld().spawn(
+                block.getLocation().add(0.5, 0.5, 0.5),
+                org.bukkit.entity.FallingBlock.class,
+                fallingBlock -> fallingBlock.setBlockData(blockData)
+            );
             entity.setVelocity(new Vector(0, 2, 0));
             block.setType(Material.AIR, false);
         }

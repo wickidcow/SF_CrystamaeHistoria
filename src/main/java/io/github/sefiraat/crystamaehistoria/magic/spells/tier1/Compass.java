@@ -45,7 +45,7 @@ public class Compass extends Spell {
                 );
             } else {
                 final Location foundBlockLocation = foundBlock.getLocation().add(0.5, 0.5, 0.5);
-                final List<Integer> list = (List<Integer>) CrystamaeHistoria.getConfigManager().getBlockColors().getList(material.name());
+                final List<Integer> list = CrystamaeHistoria.getConfigManager().getBlockColors().getIntegerList(material.name());
                 final Color color = Color.fromRGB(list.get(0), list.get(1), list.get(2));
                 final Particle.DustOptions dustOptionsToBlock = new Particle.DustOptions(color, 1);
                 ParticleUtils.drawLine(dustOptionsToBlock, location, foundBlockLocation, 0.2);

@@ -8,9 +8,9 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -38,13 +38,13 @@ public class MobLamp extends SlimefunItem {
             new BlockPlaceHandler(false) {
                 @Override
                 public void onPlayerPlace(@Nonnull BlockPlaceEvent event) {
-                    BlockStorage.addBlockInfo(event.getBlock(), "CH_UUID", event.getPlayer().getUniqueId().toString());
+                    SlimefunStorageUtils.setData(event.getBlock().getLocation(), "CH_UUID", event.getPlayer().getUniqueId().toString());
                 }
             },
             new BlockBreakHandler(false, false) {
                 @Override
                 public void onPlayerBreak(BlockBreakEvent blockBreakEvent, ItemStack itemStack, List<ItemStack> list) {
-                    BlockStorage.clearBlockInfo(blockBreakEvent.getBlock());
+                    SlimefunStorageUtils.removeData(blockBreakEvent.getBlock().getLocation(), "CH_UUID");
                 }
             },
             new BlockTicker() {
@@ -54,9 +54,9 @@ public class MobLamp extends SlimefunItem {
                 }
 
                 @Override
-                public void tick(Block block, SlimefunItem slimefunItem, Config config) {
+                public void tick(Block block, SlimefunItem slimefunItem, SlimefunBlockData config) {
                     for (Monster monster : block.getWorld().getNearbyEntitiesByType(Monster.class, block.getLocation(), radius)) {
-                        UUID uuid = UUID.fromString(BlockStorage.getLocationInfo(block.getLocation(), "CH_UUID"));
+                        UUID uuid = UUID.fromString(SlimefunStorageUtils.getData(block.getLocation(), "CH_UUID"));
                         GeneralUtils.pushEntity(
                             uuid,
                             block.getLocation().clone().add(0.5, 0.5, 0.5),

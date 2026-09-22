@@ -6,7 +6,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import org.bukkit.Location;
@@ -50,9 +50,12 @@ public class ChroniclerPanel extends TickingMenuBlock {
             @Override
             public void onPlayerPlace(@Nonnull BlockPlaceEvent event) {
                 final Location location = event.getBlockPlaced().getLocation();
-                final ChroniclerPanelCache cache = new ChroniclerPanelCache(BlockStorage.getInventory(location), tier);
-                cache.setActivePlayer(event.getPlayer());
-                CACHES.put(location, cache);
+                final BlockMenu menu = SlimefunStorageUtils.getMenu(location);
+                if (menu != null) {
+                    final ChroniclerPanelCache cache = new ChroniclerPanelCache(menu, tier);
+                    cache.setActivePlayer(event.getPlayer());
+                    CACHES.put(location, cache);
+                }
             }
         };
     }

@@ -12,6 +12,7 @@ import io.github.sefiraat.crystamaehistoria.utils.mobgoals.AbstractGoal;
 import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.Pair;
 import lombok.experimental.UtilityClass;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -51,6 +52,7 @@ public class SpellUtils {
     }
 
     @ParametersAreNonnullByDefault
+    @SuppressWarnings("unchecked")
     private static <T extends Mob> MagicSummon summonTemporaryMob(
         EntityType entityType,
         UUID caster,
@@ -69,7 +71,7 @@ public class SpellUtils {
 
         CrystamaeHistoria.getSummonedEntityMap().put(magicSummon, System.currentTimeMillis() + duration);
         DataTypeMethods.setCustom(mob, Keys.PDC_IS_SPAWN_OWNER, PersistentUUIDDataType.TYPE, caster);
-        mob.setCustomName(ThemeType.getRandomEggName());
+        mob.customName(Component.text(ThemeType.getRandomEggName()));
 
         if (goal == null) {
             mobGoals.removeAllGoals(mob);
@@ -135,7 +137,6 @@ public class SpellUtils {
         final MagicProjectile magicProjectile = new MagicProjectile(projectile);
 
         projectile.setShooter(Bukkit.getPlayer(castInformation.getCaster()));
-        projectile.setBounce(false);
         if (projectile instanceof Fireball) {
             Fireball fireball = (Fireball) projectile;
             fireball.setIsIncendiary(false);
@@ -196,7 +197,7 @@ public class SpellUtils {
         Material material,
         long duration
     ) {
-        final FallingBlock fallingBlock = location.getWorld().spawnFallingBlock(location, material.createBlockData());
+        final FallingBlock fallingBlock = location.getWorld().spawn(location, FallingBlock.class, entity -> entity.setBlockData(material.createBlockData()));
         final MagicFallingBlock magicFallingBlock = new MagicFallingBlock(fallingBlock);
 
         CrystamaeHistoria.getFallingBlockMap().put(magicFallingBlock, new Pair<>(castInformation, System.currentTimeMillis() + duration));

@@ -5,31 +5,32 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 public class BlockVeil extends SlimefunItem {
 
-    private final Class<? extends SlimefunItem>[] classToCover;
-    private final String[] itemIdsToCover;
+    private final List<Class<? extends SlimefunItem>> classesToCover;
+    private final List<String> itemIdsToCover;
 
     @ParametersAreNonnullByDefault
-    public BlockVeil(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, @Nullable ItemStack recipeOutput, Class<? extends SlimefunItem>... classToCover) {
+    public BlockVeil(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, @Nullable ItemStack recipeOutput, List<Class<? extends SlimefunItem>> classesToCover) {
         super(itemGroup, item, recipeType, recipe, recipeOutput);
-        this.classToCover = classToCover;
-        this.itemIdsToCover = new String[0];
+        this.classesToCover = List.copyOf(classesToCover);
+        this.itemIdsToCover = List.of();
     }
 
     @ParametersAreNonnullByDefault
-    public BlockVeil(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, @Nullable ItemStack recipeOutput, String... itemIdsToCover) {
+    public BlockVeil(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, @Nullable ItemStack recipeOutput, List<String> itemIdsToCover, boolean byItemId) {
         super(itemGroup, item, recipeType, recipe, recipeOutput);
-        this.classToCover = new Class[0];
-        this.itemIdsToCover = itemIdsToCover;
+        this.classesToCover = List.of();
+        this.itemIdsToCover = List.copyOf(itemIdsToCover);
     }
 
     @Override
@@ -42,14 +43,15 @@ public class BlockVeil extends SlimefunItem {
             e.cancel();
             if (e.getClickedBlock().isPresent()) {
                 Block block = e.getClickedBlock().get();
-                SlimefunItem slimefunItem = BlockStorage.check(block);
+                final var blockData = StorageCacheUtils.getBlock(block.getLocation());
+                SlimefunItem slimefunItem = blockData == null ? null : SlimefunItem.getById(blockData.getSfId());
                 ItemStack offhand = e.getPlayer().getInventory().getItemInOffHand();
 
                 if (slimefunItem == null) {
                     return;
                 }
 
-                for (Class<?> testClass : this.classToCover) {
+                for (Class<?> testClass : this.classesToCover) {
                     if (testClass.isInstance(slimefunItem)) {
                         applyCover(e.getItem(), offhand, block);
                         return;

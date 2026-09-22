@@ -9,8 +9,8 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -44,15 +44,15 @@ public class GreenHouseGlass extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         blockOwnerMap.put(
             block.getLocation(),
-            UUID.fromString(BlockStorage.getLocationInfo(block.getLocation(), "CH_UUID"))
+            UUID.fromString(SlimefunStorageUtils.getData(block.getLocation(), "CH_UUID"))
         );
     }
 
     @Override
-    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         if (!GeneralUtils.testChance(this.rate, 100) || TimePeriod.isLight(block.getWorld())) {
             return;
         }
@@ -93,7 +93,7 @@ public class GreenHouseGlass extends TickingBlockNoGui {
     @Override
     protected void onPlace(@Nonnull BlockPlaceEvent event) {
         final UUID uuid = event.getPlayer().getUniqueId();
-        BlockStorage.addBlockInfo(event.getBlock(), "CH_UUID", uuid.toString());
+        SlimefunStorageUtils.setData(event.getBlock().getLocation(), "CH_UUID", uuid.toString());
         blockOwnerMap.put(event.getBlock().getLocation(), uuid);
     }
 

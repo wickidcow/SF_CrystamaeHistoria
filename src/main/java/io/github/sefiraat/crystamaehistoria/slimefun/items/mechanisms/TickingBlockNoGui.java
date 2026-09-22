@@ -7,7 +7,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -42,10 +42,10 @@ public abstract class TickingBlockNoGui extends SlimefunItem {
     }
 
     @ParametersAreNonnullByDefault
-    protected abstract void onFirstTick(Block block, SlimefunItem slimefunItem, Config config);
+    protected abstract void onFirstTick(Block block, SlimefunItem slimefunItem, SlimefunBlockData config);
 
     @ParametersAreNonnullByDefault
-    protected abstract void onTick(Block block, SlimefunItem slimefunItem, Config config);
+    protected abstract void onTick(Block block, SlimefunItem slimefunItem, SlimefunBlockData config);
 
     @ParametersAreNonnullByDefault
     protected abstract void onPlace(BlockPlaceEvent event);
@@ -62,7 +62,7 @@ public abstract class TickingBlockNoGui extends SlimefunItem {
                 }
 
                 @Override
-                public void tick(Block block, SlimefunItem slimefunItem, Config config) {
+                public void tick(Block block, SlimefunItem slimefunItem, SlimefunBlockData config) {
                     if (!firstTickMap.containsKey(block.getLocation())) {
                         onFirstTick(block, slimefunItem, config);
                         firstTickMap.put(block.getLocation(), true);

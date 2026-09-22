@@ -8,8 +8,9 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import org.bukkit.Color;
@@ -61,9 +62,12 @@ public class LiquefactionBasin extends TickingMenuBlock {
             @Override
             public void onPlayerPlace(@Nonnull BlockPlaceEvent event) {
                 final Location location = event.getBlockPlaced().getLocation();
-                final LiquefactionBasinCache cache = new LiquefactionBasinCache(BlockStorage.getInventory(location), maxVolume);
-                cache.setActivePlayer(event.getPlayer());
-                cacheMap.put(location, cache);
+                final BlockMenu menu = SlimefunStorageUtils.getMenu(location);
+                if (menu != null) {
+                    final LiquefactionBasinCache cache = new LiquefactionBasinCache(menu, maxVolume);
+                    cache.setActivePlayer(event.getPlayer());
+                    cacheMap.put(location, cache);
+                }
             }
         };
     }
@@ -132,13 +136,18 @@ public class LiquefactionBasin extends TickingMenuBlock {
         super.onNewInstance(blockMenu, b);
         if (!cacheMap.containsKey(blockMenu.getLocation())) {
             LiquefactionBasinCache cache = new LiquefactionBasinCache(blockMenu, this.maxVolume);
-            Config c = BlockStorage.getLocationInfo(blockMenu.getLocation());
+            SlimefunBlockData data = StorageCacheUtils.getBlock(blockMenu.getLocation());
 
-            for (String key : c.getKeys()) {
-                if (key.startsWith(LiquefactionBasinCache.CH_LEVEL_PREFIX)) {
-                    String id = key.replace(LiquefactionBasinCache.CH_LEVEL_PREFIX, "");
-                    int amount = Integer.parseInt(c.getString(key));
-                    cache.getContentMap().put(StoryType.valueOf(id), amount);
+            if (data != null) {
+                for (String key : data.getDataKeys()) {
+                    if (key.startsWith(LiquefactionBasinCache.CH_LEVEL_PREFIX)) {
+                        String id = key.replace(LiquefactionBasinCache.CH_LEVEL_PREFIX, "");
+                        String storedAmount = data.getData(key);
+                        if (storedAmount != null) {
+                            int amount = Integer.parseInt(storedAmount);
+                            cache.getContentMap().put(StoryType.valueOf(id), amount);
+                        }
+                    }
                 }
             }
 

@@ -39,13 +39,13 @@ public class SleepingBag extends UnplaceableBlock {
                 return;
             }
             if (location.getBlock().isEmpty() && GeneralUtils.hasPermission(player, location, Interaction.PLACE_BLOCK)) {
-                final Location respawnLocation = player.getBedSpawnLocation();
+                final Location respawnLocation = player.getRespawnLocation();
 
                 block.setType(Material.WHITE_BED);
                 player.sleep(location, true);
                 CrystamaeHistoria.getSpellMemory().getSleepingBags().put(player.getUniqueId(), location);
                 player.sendMessage(ThemeType.SUCCESS.getColor() + "Respawn location reset to previous.");
-                player.setBedSpawnLocation(respawnLocation, true);
+                player.setRespawnLocation(respawnLocation, true);
             }
 
         };

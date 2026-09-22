@@ -3,12 +3,13 @@ package io.github.sefiraat.crystamaehistoria.slimefun.items.tools;
 import io.github.sefiraat.crystamaehistoria.utils.GeneralUtils;
 import io.github.sefiraat.crystamaehistoria.utils.Keys;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.items.LimitedUseItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -322,7 +323,8 @@ public class Displacer extends LimitedUseItem {
     }
 
     public static void convertBlock(@Nonnull Block block) {
-        if (BlockStorage.check(block) != null) {
+        final var blockData = StorageCacheUtils.getBlock(block.getLocation());
+        if (blockData != null && SlimefunItem.getById(blockData.getSfId()) != null) {
             return;
         }
 

@@ -2,11 +2,14 @@ package io.github.sefiraat.crystamaehistoria.utils;
 
 import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
 import lombok.experimental.UtilityClass;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.List;
 
 @UtilityClass
@@ -32,10 +35,10 @@ public class GildingUtils {
     public static void makeGilded(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         PersistentDataAPI.setBoolean(itemMeta, Keys.PDC_IS_GILDED, true);
-        List<String> lore = itemStack.getLore();
-        lore.add("");
-        lore.add("" + ChatColor.YELLOW + ChatColor.BOLD + "GILDED");
-        itemMeta.setLore(lore);
+        List<Component> lore = itemMeta.lore() == null ? new ArrayList<>() : new ArrayList<>(itemMeta.lore());
+        lore.add(Component.empty());
+        lore.add(Component.text("GILDED", NamedTextColor.YELLOW).decorate(TextDecoration.BOLD));
+        itemMeta.lore(lore);
         itemStack.setItemMeta(itemMeta);
     }
 

@@ -16,6 +16,7 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.items.blocks.UnplaceableBlock;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -129,6 +130,7 @@ public class CrystamageSatchel extends UnplaceableBlock {
         return satchelInstance;
     }
 
+    @SuppressWarnings("deprecation") // Slimefun Legacy has not yet replaced the ChestMenu compatibility API.
     private static final class SatchelGui extends ChestMenu {
 
         private static final int[] SLOTS_UNIQUE = new int[]{
@@ -241,7 +243,7 @@ public class CrystamageSatchel extends UnplaceableBlock {
 
         @Override
         public void open(Player... players) {
-            this.instance.setLastUser(players[0].getDisplayName());
+            this.instance.setLastUser(players[0].getName());
             saveInstance();
             super.open(players);
         }
@@ -267,10 +269,14 @@ public class CrystamageSatchel extends UnplaceableBlock {
         }
 
         private static ItemStack getStackWithAmount(@Nonnull ItemStack itemstack, int amount) {
-            final List<String> lore = new ArrayList<>();
-            lore.add("");
-            lore.add(ThemeType.CLICK_INFO.getColor() + "Amount: " + ThemeType.PASSIVE.getColor() + amount);
-            itemstack.setLore(lore);
+            final List<Component> lore = new ArrayList<>();
+            lore.add(Component.empty());
+            lore.add(
+                Component.text("Amount: ")
+                    .color(ThemeType.CLICK_INFO.getComponentColor())
+                    .append(Component.text(amount).color(ThemeType.PASSIVE.getComponentColor()))
+            );
+            itemstack.lore(lore);
             return itemstack;
         }
 

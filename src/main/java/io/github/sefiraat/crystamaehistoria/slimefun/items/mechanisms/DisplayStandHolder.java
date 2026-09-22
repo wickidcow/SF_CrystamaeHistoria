@@ -1,7 +1,7 @@
 package io.github.sefiraat.crystamaehistoria.slimefun.items.mechanisms;
 
 import io.github.sefiraat.crystamaehistoria.utils.ArmourStandUtils;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -44,14 +44,14 @@ public abstract class DisplayStandHolder extends AbstractCache {
     @ParametersAreNonnullByDefault
     protected ArmorStand getDisplayStand() {
         Block block = blockMenu.getBlock();
-        String uuidString = BlockStorage.getLocationInfo(getLocation(), "ch_display_stand");
+        String uuidString = StorageCacheUtils.getData(getLocation(), "ch_display_stand");
         if (uuidString != null) {
             UUID uuid = UUID.fromString(uuidString);
             return (ArmorStand) Bukkit.getEntity(uuid);
         } else {
             final ArmorStand armorStand = (ArmorStand) block.getWorld().spawnEntity(getLocation().add(0.5, -1.7, 0.5), EntityType.ARMOR_STAND);
             ArmourStandUtils.setDisplay(armorStand);
-            BlockStorage.addBlockInfo(block.getLocation(), "ch_display_stand", armorStand.getUniqueId().toString());
+            StorageCacheUtils.setData(block.getLocation(), "ch_display_stand", armorStand.getUniqueId().toString());
             return armorStand;
         }
     }

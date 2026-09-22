@@ -8,7 +8,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import lombok.Getter;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import org.bukkit.Color;
@@ -89,7 +89,7 @@ public class ExpCollector extends TickingMenuBlock {
     }
 
     private void syncValue(Block block) {
-        BlockStorage.addBlockInfo(block, ID_VOLUME, String.valueOf(volumeMap.get(block.getLocation())));
+        SlimefunStorageUtils.setData(block.getLocation(), ID_VOLUME, String.valueOf(volumeMap.get(block.getLocation())));
     }
 
     @Override
@@ -117,11 +117,11 @@ public class ExpCollector extends TickingMenuBlock {
     @ParametersAreNonnullByDefault
     protected void onNewInstance(BlockMenu menu, Block block) {
         Location location = block.getLocation();
-        String owner = BlockStorage.getLocationInfo(location, ID_UUID);
+        String owner = SlimefunStorageUtils.getData(location, ID_UUID);
         if (owner != null) {
             blockOwnerMap.put(location, UUID.fromString(owner));
         }
-        String volumeString = BlockStorage.getLocationInfo(location, ID_VOLUME);
+        String volumeString = SlimefunStorageUtils.getData(location, ID_VOLUME);
         if (volumeString != null) {
             volumeMap.put(location, Integer.parseInt(volumeString));
         }
@@ -146,16 +146,19 @@ public class ExpCollector extends TickingMenuBlock {
 
     @Override
     protected void onBreak(BlockBreakEvent e, BlockMenu menu) {
-        BlockStorage.clearBlockInfo(e.getBlock());
+        SlimefunStorageUtils.removeData(e.getBlock().getLocation(), ID_UUID);
+        SlimefunStorageUtils.removeData(e.getBlock().getLocation(), ID_VOLUME);
+        blockOwnerMap.remove(e.getBlock().getLocation());
+        volumeMap.remove(e.getBlock().getLocation());
     }
 
     @Override
     @ParametersAreNonnullByDefault
     protected void onPlace(BlockPlaceEvent e, Block b) {
         final UUID uuid = e.getPlayer().getUniqueId();
-        BlockStorage.addBlockInfo(b, ID_UUID, uuid.toString());
+        SlimefunStorageUtils.setData(b.getLocation(), ID_UUID, uuid.toString());
         blockOwnerMap.put(b.getLocation(), uuid);
-        BlockStorage.addBlockInfo(b, ID_VOLUME, String.valueOf(0));
+        SlimefunStorageUtils.setData(b.getLocation(), ID_VOLUME, String.valueOf(0));
         volumeMap.put(b.getLocation(), 0);
     }
 }

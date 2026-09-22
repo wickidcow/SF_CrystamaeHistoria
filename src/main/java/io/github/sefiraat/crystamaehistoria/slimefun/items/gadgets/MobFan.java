@@ -9,7 +9,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import lombok.Getter;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import org.bukkit.FluidCollisionMode;
@@ -29,6 +29,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("deprecation")
 public class MobFan extends TickingMenuBlock {
 
     protected static final String ID_DIRECTION = "CH_DIRECTION";
@@ -63,8 +64,8 @@ public class MobFan extends TickingMenuBlock {
             @Override
             @ParametersAreNonnullByDefault
             public void onPlayerPlace(BlockPlaceEvent event) {
-                BlockStorage.addBlockInfo(event.getBlock(), ID_UUID, event.getPlayer().getUniqueId().toString());
-                BlockStorage.addBlockInfo(event.getBlock(), ID_DIRECTION, BlockFace.SELF.name());
+                SlimefunStorageUtils.setData(event.getBlock().getLocation(), ID_UUID, event.getPlayer().getUniqueId().toString());
+                SlimefunStorageUtils.setData(event.getBlock().getLocation(), ID_DIRECTION, BlockFace.SELF.name());
             }
         };
     }
@@ -74,7 +75,8 @@ public class MobFan extends TickingMenuBlock {
             @Override
             @ParametersAreNonnullByDefault
             public void onPlayerBreak(BlockBreakEvent blockBreakEvent, ItemStack itemStack, List<ItemStack> list) {
-                BlockStorage.clearBlockInfo(blockBreakEvent.getBlock());
+                SlimefunStorageUtils.removeData(blockBreakEvent.getBlock().getLocation(), ID_UUID);
+                SlimefunStorageUtils.removeData(blockBreakEvent.getBlock().getLocation(), ID_DIRECTION);
             }
         };
     }
@@ -82,9 +84,9 @@ public class MobFan extends TickingMenuBlock {
     @Override
     @ParametersAreNonnullByDefault
     protected void tick(Block block, BlockMenu blockMenu) {
-        final BlockFace direction = BlockFace.valueOf(BlockStorage.getLocationInfo(block.getLocation(), ID_DIRECTION));
+        final BlockFace direction = BlockFace.valueOf(SlimefunStorageUtils.getData(block.getLocation(), ID_DIRECTION));
         final Vector facingVector = direction.getDirection();
-        final UUID owner = UUID.fromString(BlockStorage.getLocationInfo(block.getLocation(), ID_UUID));
+        final UUID owner = UUID.fromString(SlimefunStorageUtils.getData(block.getLocation(), ID_UUID));
 
         if (direction == BlockFace.SELF) {
             return;
@@ -156,7 +158,7 @@ public class MobFan extends TickingMenuBlock {
     @Override
     @ParametersAreNonnullByDefault
     protected void onNewInstance(BlockMenu menu, Block b) {
-        BlockFace direction = BlockFace.valueOf(BlockStorage.getLocationInfo(b.getLocation(), ID_DIRECTION));
+        BlockFace direction = BlockFace.valueOf(SlimefunStorageUtils.getData(b.getLocation(), ID_DIRECTION));
         setDirection(menu, direction);
 
         menu.addMenuClickHandler(SET_NORTH, (player, i, itemStack, clickAction) -> setDirection(menu, BlockFace.NORTH));
@@ -170,7 +172,7 @@ public class MobFan extends TickingMenuBlock {
 
     @ParametersAreNonnullByDefault
     private boolean setDirection(BlockMenu blockMenu, BlockFace blockFace) {
-        BlockStorage.addBlockInfo(blockMenu.getBlock(), ID_DIRECTION, blockFace.name());
+        SlimefunStorageUtils.setData(blockMenu.getLocation(), ID_DIRECTION, blockFace.name());
 
         blockMenu.replaceExistingItem(SET_UP, GuiElements.getDirectionalSlotPane(BlockFace.UP, false));
         blockMenu.replaceExistingItem(SET_DOWN, GuiElements.getDirectionalSlotPane(BlockFace.DOWN, false));

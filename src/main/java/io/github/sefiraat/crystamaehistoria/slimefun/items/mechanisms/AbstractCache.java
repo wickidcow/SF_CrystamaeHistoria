@@ -2,7 +2,7 @@ package io.github.sefiraat.crystamaehistoria.slimefun.items.mechanisms;
 
 import io.github.sefiraat.crystamaehistoria.utils.Keys;
 import lombok.Getter;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -27,12 +27,12 @@ public abstract class AbstractCache {
 
     @OverridingMethodsMustInvokeSuper
     public void kill(Location location) {
-        BlockStorage.clearBlockInfo(location);
+        SlimefunStorageUtils.removeBlock(location);
     }
 
     public void setActivePlayer(@Nonnull Player player) {
         this.activePlayer = player.getUniqueId();
-        BlockStorage.addBlockInfo(this.blockMenu.getBlock(), Keys.BS_CP_ACTIVE_PLAYER, player.getUniqueId().toString());
+        SlimefunStorageUtils.setData(this.blockMenu.getLocation(), Keys.BS_CP_ACTIVE_PLAYER, player.getUniqueId().toString());
     }
 
 }

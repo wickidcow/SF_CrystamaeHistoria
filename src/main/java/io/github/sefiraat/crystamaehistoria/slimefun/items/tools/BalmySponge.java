@@ -10,7 +10,8 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -118,12 +119,12 @@ public class BalmySponge extends SlimefunItem {
             @Override
             public void onPlayerBreak(BlockBreakEvent e, ItemStack item, List<ItemStack> drops) {
                 if (isSaturated(e.getBlock())) {
-                    final ItemStack itemStack = BalmySponge.this.getItem().clone();
+                    final ItemStack itemStack = BalmySponge.this.getItem().clone().withType(Material.FIRE_CORAL_BLOCK);
                     final ItemMeta itemMeta = itemStack.getItemMeta();
 
                     changeSaturation(itemMeta, true);
-                    itemMeta.setDisplayName(itemMeta.getDisplayName() + DISPLAY_NAME_SUFFIX);
-                    itemStack.setType(Material.FIRE_CORAL_BLOCK);
+                    final Component currentName = itemMeta.displayName();
+                    itemMeta.displayName((currentName == null ? Component.empty() : currentName).append(Component.text(DISPLAY_NAME_SUFFIX)));
                     itemStack.setItemMeta(itemMeta);
                     drops.add(itemStack);
                 } else {
@@ -140,7 +141,7 @@ public class BalmySponge extends SlimefunItem {
     }
 
     private static void changeSaturation(@Nonnull Block block, boolean saturated) {
-        BlockStorage.addBlockInfo(block, KEY.value(), Boolean.toString(saturated));
+        StorageCacheUtils.setData(block.getLocation(), KEY.value(), Boolean.toString(saturated));
     }
 
     private static void changeSaturation(@Nonnull ItemMeta itemMeta, boolean saturated) {
@@ -148,7 +149,7 @@ public class BalmySponge extends SlimefunItem {
     }
 
     private static boolean isSaturated(@Nonnull Block block) {
-        String string = BlockStorage.getLocationInfo(block.getLocation(), KEY.value());
+        String string = StorageCacheUtils.getData(block.getLocation(), KEY.value());
         return Boolean.parseBoolean(string);
     }
 

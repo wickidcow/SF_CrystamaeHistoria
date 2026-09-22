@@ -19,7 +19,6 @@ import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -38,6 +37,7 @@ import java.util.stream.Collectors;
 /**
  * @noinspection deprecation
  */
+@SuppressWarnings("deprecation")
 public class StoryCollectionFlexGroup extends FlexItemGroup {
 
     private static final int PAGE_SIZE = 36;
@@ -271,8 +271,8 @@ public class StoryCollectionFlexGroup extends FlexItemGroup {
 
     @ParametersAreNonnullByDefault
     private ItemStack getStatsStack(UUID player, BlockDefinition definition) {
-        final ChatColor color = ThemeType.CLICK_INFO.getColor();
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
+        final String color = ThemeType.CLICK_INFO.getColor();
+        final String passive = ThemeType.PASSIVE.getColor();
         final List<String> lore = new ArrayList<>();
         final BlockRank blockRank = PlayerStatistics.getBlockRank(player, definition);
 
@@ -296,8 +296,8 @@ public class StoryCollectionFlexGroup extends FlexItemGroup {
 
     @ParametersAreNonnullByDefault
     private ItemStack getPlayerInfoStack(Player player) {
-        final ChatColor color = ThemeType.CLICK_INFO.getColor();
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
+        final String color = ThemeType.CLICK_INFO.getColor();
+        final String passive = ThemeType.PASSIVE.getColor();
         final List<String> lore = new ArrayList<>();
         final StoryRank storyRank = PlayerStatistics.getStoryRank(player.getUniqueId());
 

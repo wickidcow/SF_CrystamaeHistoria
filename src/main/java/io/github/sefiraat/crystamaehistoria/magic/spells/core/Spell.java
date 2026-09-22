@@ -10,16 +10,11 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.Pair;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -48,7 +43,7 @@ public abstract class Spell {
 
     @Nonnull
     public SlimefunItemStack getThemedStack() {
-        ChatColor passiveColor = ThemeType.PASSIVE.getColor();
+        String passiveColor = ThemeType.PASSIVE.getColor();
         List<String> finalLore = new ArrayList<>();
         for (String s : getLore()) {
             finalLore.add(passiveColor + s);
@@ -63,7 +58,6 @@ public abstract class Spell {
         );
         ItemMeta itemMeta = stack.getItemMeta();
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         stack.setItemMeta(itemMeta);
         return stack;
     }
@@ -159,32 +153,6 @@ public abstract class Spell {
     @ParametersAreNonnullByDefault
     public double getProjectileAoe(CastInformation castInformation) {
         return spellCore.isProjectileAoeMultiplied() ? spellCore.getProjectileAoeRange() * castInformation.getStaveLevel() : spellCore.getProjectileAoeRange();
-    }
-
-    /**
-     * Sets the last damage cause to Magic and Caster
-     *
-     * @param damagedEntity   The {@link LivingEntity} that was hit by the spell
-     * @param castInformation The {@link CastInformation} containing the caster
-     */
-    @ParametersAreNonnullByDefault
-    protected void setLastDamageToCaster(LivingEntity damagedEntity, CastInformation castInformation) {
-        setLastDamageToCaster(damagedEntity, castInformation.getCaster());
-    }
-
-    /**
-     * Sets the last damage cause to Magic and Caster
-     *
-     * @param damagedEntity The {@link LivingEntity} that was hit by the spell
-     * @param casterUUID    The {@link LivingEntity} that cast the spell
-     */
-    @ParametersAreNonnullByDefault
-    protected void setLastDamageToCaster(@Nonnull LivingEntity damagedEntity, @Nonnull UUID casterUUID) {
-        Player player = Bukkit.getPlayer(casterUUID);
-        if (player != null) {
-            EntityDamageByEntityEvent e = new EntityDamageByEntityEvent(player, damagedEntity, EntityDamageEvent.DamageCause.MAGIC, 0);
-            damagedEntity.setLastDamageCause(e);
-        }
     }
 
     /**

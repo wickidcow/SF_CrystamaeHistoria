@@ -8,12 +8,14 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -60,9 +62,14 @@ public class MobTrap extends TickingBlockNoGui {
             if (itemStack.getType() == Material.POTION && optionalBlock.isPresent()) {
                 final Block block = optionalBlock.get();
                 final PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
-                final PotionEffectType type = potionMeta.getBasePotionData().getType().getEffectType();
+                final PotionEffectType type = potionMeta.hasBasePotionType()
+                    ? potionMeta.getBasePotionType().getPotionEffects().stream()
+                        .findFirst()
+                        .map(PotionEffect::getType)
+                        .orElse(null)
+                    : null;
                 if (type != null) {
-                    BlockStorage.addBlockInfo(block, "POT_EFF", type.getName());
+                    SlimefunStorageUtils.setData(block.getLocation(), "POT_EFF", type.getKey().toString());
                     potionEffectTypeMap.put(block.getLocation(), type);
                     itemStack.setAmount(itemStack.getAmount() - 1);
                 }
@@ -71,18 +78,18 @@ public class MobTrap extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
-        String potionEffectString = BlockStorage.getLocationInfo(block.getLocation(), "POT_EFF");
+    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
+        String potionEffectString = SlimefunStorageUtils.getData(block.getLocation(), "POT_EFF");
         if (potionEffectString != null) {
             potionEffectTypeMap.put(
                 block.getLocation(),
-                PotionEffectType.getByName(potionEffectString)
+                Registry.MOB_EFFECT.get(NamespacedKey.fromString(potionEffectString))
             );
         }
     }
 
     @Override
-    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         final Location location = block.getLocation().add(0.5, 0.5, 0.5);
         final Particle.DustOptions dustOptions = new Particle.DustOptions(Color.AQUA, 1);
         final Collection<Entity> entities = location.getWorld().getNearbyEntities(
@@ -109,6 +116,7 @@ public class MobTrap extends TickingBlockNoGui {
 
     @Override
     protected void onBreak(@Nonnull BlockBreakEvent blockBreakEvent, @Nonnull ItemStack itemStack, @Nonnull List<ItemStack> list) {
-        BlockStorage.clearBlockInfo(blockBreakEvent.getBlock());
+        SlimefunStorageUtils.removeData(blockBreakEvent.getBlock().getLocation(), "POT_EFF");
+        potionEffectTypeMap.remove(blockBreakEvent.getBlock().getLocation());
     }
 }

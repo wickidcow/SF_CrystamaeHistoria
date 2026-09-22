@@ -1,5 +1,6 @@
 package io.github.sefiraat.crystamaehistoria.utils;
 
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import io.github.sefiraat.crystamaehistoria.CrystamaeHistoria;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.blocks.BlockPosition;
@@ -7,8 +8,9 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.Pair;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import lombok.experimental.UtilityClass;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.Bukkit;
+import net.kyori.adventure.text.Component;
+import org.bukkit.GameRules;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -24,7 +26,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import javax.annotation.Nonnull;
@@ -115,14 +116,13 @@ public final class GeneralUtils {
     @ParametersAreNonnullByDefault
     public static void markBlockForRemoval(Block block, int secondsUntilRemoval) {
         long timeUntilRemoval = secondsUntilRemoval * 1000L;
-        block.setMetadata("ch", new FixedMetadataValue(CrystamaeHistoria.getInstance(), "y"));
         long removalTime = System.currentTimeMillis() + timeUntilRemoval;
         CrystamaeHistoria.getSpellMemory().getBlocksToRemove().put(new BlockPosition(block), removalTime);
     }
 
     @ParametersAreNonnullByDefault
     public static boolean isRemovableBlock(Block block) {
-        return block.hasMetadata("ch");
+        return CrystamaeHistoria.getSpellMemory().getBlocksToRemove().containsKey(new BlockPosition(block));
     }
 
     @ParametersAreNonnullByDefault
@@ -133,7 +133,7 @@ public final class GeneralUtils {
     @ParametersAreNonnullByDefault
     public static boolean hasPermission(UUID player, Location location, Interaction interaction) {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(player);
-        if (interaction == Interaction.ATTACK_PLAYER && !location.getWorld().getPVP()) {
+        if (interaction == Interaction.ATTACK_PLAYER && Boolean.FALSE.equals(location.getWorld().getGameRuleValue(GameRules.PVP))) {
             return false;
         }
         return Slimefun.getProtectionManager().hasPermission(offlinePlayer, location, interaction);
@@ -197,7 +197,7 @@ public final class GeneralUtils {
     @ParametersAreNonnullByDefault
     public static boolean blockCanBeBroken(UUID caster, Block block) {
         return hasPermission(caster, block, Interaction.BREAK_BLOCK)
-            && !BlockStorage.hasBlockInfo(block)
+            && !StorageCacheUtils.hasSlimefunBlock(block.getLocation())
             && !(block.getState() instanceof TileState)
             && block.getType().getHardness() != -1
             && !block.getType().isAir();
@@ -264,7 +264,7 @@ public final class GeneralUtils {
             stack
         );
         PersistentDataAPI.setBoolean(item, Keys.PDC_IS_DISPLAY_ITEM, true);
-        item.setCustomName(name);
+        item.customName(Component.text(name));
         item.setCustomNameVisible(true);
         item.setGravity(false);
         item.setVelocity(new Vector(0, 0, 0));
