@@ -10,7 +10,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.Pair;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -44,7 +43,7 @@ public abstract class Spell {
 
     @Nonnull
     public SlimefunItemStack getThemedStack() {
-        ChatColor passiveColor = ThemeType.PASSIVE.getColor();
+        String passiveColor = ThemeType.PASSIVE.getColor();
         List<String> finalLore = new ArrayList<>();
         for (String s : getLore()) {
             finalLore.add(passiveColor + s);
@@ -59,7 +58,6 @@ public abstract class Spell {
         );
         ItemMeta itemMeta = stack.getItemMeta();
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         stack.setItemMeta(itemMeta);
         return stack;
     }
