@@ -5,6 +5,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -24,7 +25,7 @@ public class EphemeralCraftingTable extends SlimefunItem {
     private ItemUseHandler onItemUse() {
         return e -> {
             e.cancel();
-            e.getPlayer().openWorkbench(null, true);
+            e.getPlayer().openInventory(org.bukkit.Bukkit.createInventory(e.getPlayer(), InventoryType.WORKBENCH));
         };
     }
 }
