@@ -43,6 +43,10 @@
               <version>1.18.42</version>
             </path>
           </annotationProcessorPaths>
+          <compilerArgs>
+            <arg>-Xlint:deprecation</arg>
+            <arg>-Xlint:unchecked</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
       <plugin>
@@ -63,7 +67,7 @@
             <relocation><pattern>com.jeff_media.morepersistentdatatypes</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.morepersistentdatatypes</shadedPattern></relocation>
           </relocations>
           <filters>
-            <filter><artifact>*:*</artifact><excludes><exclude>META-INF/*.SF</exclude><exclude>META-INF/*.RSA</exclude><exclude>META-INF/*.DSA</exclude></excludes></filter>
+            <filter><artifact>*:*</artifact><excludes><exclude>META-INF/MANIFEST.MF</exclude><exclude>META-INF/*.SF</exclude><exclude>META-INF/*.RSA</exclude><exclude>META-INF/*.DSA</exclude></excludes></filter>
             <filter><artifact>com.elmakers.mine.bukkit:EffectLib</artifact><excludes><exclude>plugin.yml</exclude></excludes></filter>
           </filters>
         </configuration></execution></executions>
