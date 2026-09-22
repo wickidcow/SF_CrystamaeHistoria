@@ -9,7 +9,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
@@ -44,7 +44,7 @@ public class GreenHouseGlass extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         blockOwnerMap.put(
             block.getLocation(),
             UUID.fromString(BlockStorage.getLocationInfo(block.getLocation(), "CH_UUID"))
@@ -52,7 +52,7 @@ public class GreenHouseGlass extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         if (!GeneralUtils.testChance(this.rate, 100) || TimePeriod.isLight(block.getWorld())) {
             return;
         }
