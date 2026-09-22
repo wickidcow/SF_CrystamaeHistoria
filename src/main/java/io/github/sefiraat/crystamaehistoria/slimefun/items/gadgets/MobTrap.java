@@ -69,7 +69,7 @@ public class MobTrap extends TickingBlockNoGui {
                         .orElse(null)
                     : null;
                 if (type != null) {
-                    SlimefunStorageUtils.setData(block.getLocation(), "POT_EFF", type.getKeyOrThrow().toString());
+                    SlimefunStorageUtils.setData(block.getLocation(), "POT_EFF", type.getKey().toString());
                     potionEffectTypeMap.put(block.getLocation(), type);
                     itemStack.setAmount(itemStack.getAmount() - 1);
                 }
