@@ -5,7 +5,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +42,7 @@ public class BlockVeil extends SlimefunItem {
             e.cancel();
             if (e.getClickedBlock().isPresent()) {
                 Block block = e.getClickedBlock().get();
-                SlimefunItem slimefunItem = BlockStorage.check(block);
+                SlimefunItem slimefunItem = StorageCacheUtils.getSlimefunItem(block.getLocation());
                 ItemStack offhand = e.getPlayer().getInventory().getItemInOffHand();
 
                 if (slimefunItem == null) {
