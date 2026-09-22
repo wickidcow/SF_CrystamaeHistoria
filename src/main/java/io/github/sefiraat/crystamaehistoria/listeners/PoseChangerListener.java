@@ -12,6 +12,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -136,12 +137,12 @@ public class PoseChangerListener implements Listener {
                 ThemeType.CLICK_INFO.getColor(),
                 nextType
             );
-            final List<String> lore = itemMeta.getLore();
+            final List<Component> lore = itemMeta.lore();
 
-            lore.set(lore.size() - 4, message);
-            itemMeta.setLore(lore);
+            lore.set(lore.size() - 4, LegacyComponentSerializer.legacySection().deserialize(message));
+            itemMeta.lore(lore);
             PersistentDataAPI.setString(itemMeta, poseKey, nextType.toString());
-            player.sendActionBar(Component.text(message));
+            player.sendActionBar(LegacyComponentSerializer.legacySection().deserialize(message));
         } else {
             final ChangeType changeType = ChangeType.valueOf(PersistentDataAPI.getString(itemMeta, changeKey, "RESET"));
             final ChangeType nextType = changeType.getNext();
@@ -151,9 +152,9 @@ public class PoseChangerListener implements Listener {
                 ThemeType.CLICK_INFO.getColor(),
                 nextType
             );
-            final List<String> lore = itemMeta.getLore();
-            lore.set(lore.size() - 3, message);
-            itemMeta.setLore(lore);
+            final List<Component> lore = itemMeta.lore();
+            lore.set(lore.size() - 3, LegacyComponentSerializer.legacySection().deserialize(message));
+            itemMeta.lore(lore);
             PersistentDataAPI.setString(itemMeta, changeKey, nextType.toString());
             player.sendActionBar(Component.text(message));
         }
