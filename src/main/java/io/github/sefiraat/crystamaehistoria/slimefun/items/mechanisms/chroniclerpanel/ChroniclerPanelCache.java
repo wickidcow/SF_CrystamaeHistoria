@@ -11,7 +11,7 @@ import io.github.sefiraat.crystamaehistoria.utils.GeneralUtils;
 import io.github.sefiraat.crystamaehistoria.utils.Keys;
 import io.github.sefiraat.crystamaehistoria.utils.StoryUtils;
 import lombok.Getter;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -51,12 +51,12 @@ public class ChroniclerPanelCache extends AbstractCache {
         super(blockMenu);
         this.tier = tier;
 
-        final String workingOnString = BlockStorage.getLocationInfo(blockMenu.getLocation(), Keys.BS_CP_WORKING_ON);
+        final String workingOnString = StorageCacheUtils.getData(blockMenu.getLocation(), Keys.BS_CP_WORKING_ON);
         if (workingOnString != null) {
             setWorking(blockMenu.getBlock(), Material.valueOf(workingOnString));
         }
 
-        final String activePlayerString = BlockStorage.getLocationInfo(blockMenu.getLocation(), Keys.BS_CP_ACTIVE_PLAYER);
+        final String activePlayerString = StorageCacheUtils.getData(blockMenu.getLocation(), Keys.BS_CP_ACTIVE_PLAYER);
         if (activePlayerString != null) {
             this.activePlayer = UUID.fromString(activePlayerString);
         }
@@ -70,7 +70,7 @@ public class ChroniclerPanelCache extends AbstractCache {
         workingOn = material;
         working = true;
 
-        BlockStorage.addBlockInfo(block, Keys.BS_CP_WORKING_ON, material.toString());
+        StorageCacheUtils.setData(block.getLocation(), Keys.BS_CP_WORKING_ON, material.toString());
         if (lightBlock.getType() == Material.AIR) {
             lightBlock.setType(Material.LIGHT);
         }
@@ -89,14 +89,14 @@ public class ChroniclerPanelCache extends AbstractCache {
     @ParametersAreNonnullByDefault
     private ArmorStand getDisplayStand() {
         if (armorStandUUID == null) {
-            final String uuidString = BlockStorage.getLocationInfo(getLocation(), "ch_display_stand");
+            final String uuidString = StorageCacheUtils.getData(getLocation(), "ch_display_stand");
             if (uuidString != null) {
                 armorStandUUID = UUID.fromString(uuidString);
             } else {
                 final Block block = blockMenu.getBlock();
                 final ArmorStand armorStand = (ArmorStand) block.getWorld().spawnEntity(getLocation().add(0.5, -0.6, 0.5), EntityType.ARMOR_STAND);
                 ArmourStandUtils.setDisplay(armorStand);
-                BlockStorage.addBlockInfo(block.getLocation(), "ch_display_stand", armorStand.getUniqueId().toString());
+                StorageCacheUtils.setData(block.getLocation(), "ch_display_stand", armorStand.getUniqueId().toString());
                 armorStandUUID = armorStand.getUniqueId();
                 return armorStand;
             }
@@ -218,7 +218,7 @@ public class ChroniclerPanelCache extends AbstractCache {
 
         workingOn = null;
         working = false;
-        BlockStorage.addBlockInfo(block, Keys.BS_CP_WORKING_ON, null);
+        StorageCacheUtils.removeData(block.getLocation(), Keys.BS_CP_WORKING_ON);
 
         if (lightBlock.getType() == Material.LIGHT) {
             lightBlock.setType(Material.AIR);
