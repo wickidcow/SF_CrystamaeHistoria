@@ -8,7 +8,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -49,7 +49,7 @@ public abstract class Stand extends TickingBlockNoGui {
 
     @Override
     @ParametersAreNonnullByDefault
-    protected void onFirstTick(Block block, SlimefunItem slimefunItem, Config config) {
+    protected void onFirstTick(Block block, SlimefunItem slimefunItem, SlimefunBlockData config) {
         final Location blockLocation = block.getLocation();
         String itemUuidString = BlockStorage.getLocationInfo(block.getLocation(), PDC_ITEM);
         if (itemUuidString != null) {
@@ -64,7 +64,7 @@ public abstract class Stand extends TickingBlockNoGui {
 
     @Override
     @ParametersAreNonnullByDefault
-    protected void onTick(Block block, SlimefunItem slimefunItem, Config config) {
+    protected void onTick(Block block, SlimefunItem slimefunItem, SlimefunBlockData config) {
         final Location blockLocation = block.getLocation();
         final UUID currentItemUuid = itemMap.get(blockLocation);
 
@@ -126,5 +126,5 @@ public abstract class Stand extends TickingBlockNoGui {
     }
 
     @ParametersAreNonnullByDefault
-    public abstract void afterTick(Item item, Block block, SlimefunItem slimefunItem, Config config);
+    public abstract void afterTick(Item item, Block block, SlimefunItem slimefunItem, SlimefunBlockData config);
 }
