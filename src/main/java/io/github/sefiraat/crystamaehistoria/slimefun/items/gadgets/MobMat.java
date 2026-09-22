@@ -8,7 +8,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -53,7 +53,7 @@ public class MobMat extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         blockOwnerMap.put(
             block.getLocation(),
             UUID.fromString(BlockStorage.getLocationInfo(block.getLocation(), "CH_UUID"))
@@ -61,7 +61,7 @@ public class MobMat extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         final Location location = block.getLocation().add(0.5, 0.5, 0.5);
         final UUID uuid = blockOwnerMap.get(block.getLocation());
         final Particle.DustOptions dustOptions = new Particle.DustOptions(Color.RED, 1);
