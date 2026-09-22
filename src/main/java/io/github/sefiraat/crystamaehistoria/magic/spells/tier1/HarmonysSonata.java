@@ -49,7 +49,7 @@ public class HarmonysSonata extends Spell {
                 .skip(ThreadLocalRandom.current().nextInt(set.size()))
                 .findAny()
                 .orElse(Material.DANDELION);
-            if (Tag.TALL_FLOWERS.isTagged(material)) {
+            if (material.createBlockData() instanceof Bisected) {
                 final Block upper = block.getRelative(BlockFace.UP);
                 if (upper.getType() == Material.AIR) {
                     block.setType(material, false);
@@ -66,8 +66,8 @@ public class HarmonysSonata extends Spell {
             } else {
                 block.setType(material);
             }
-            block.getRelative(BlockFace.DOWN).setType(Material.GRASS_BLOCK);
-            ParticleUtils.displayParticleEffect(block.getLocation(), Particle.FIREWORKS_SPARK, 0.5, 3);
+            block.getRelative(BlockFace.DOWN).setType(Material.SHORT_GRASS_BLOCK);
+            ParticleUtils.displayParticleEffect(block.getLocation(), Particle.FIREWORK, 0.5, 3);
         }
     }
 
@@ -99,6 +99,6 @@ public class HarmonysSonata extends Spell {
     @Nonnull
     @Override
     public Material getMaterial() {
-        return Material.GRASS;
+        return Material.SHORT_GRASS;
     }
 }
