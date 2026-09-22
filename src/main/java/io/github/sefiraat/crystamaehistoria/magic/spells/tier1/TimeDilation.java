@@ -24,7 +24,7 @@ public class TimeDilation extends Spell {
             .makeTickingSpell(this::cast, 10, true, 20, false)
             .makeEffectingSpell(true, false)
             .addNegativeEffect(PotionEffectType.JUMP_BOOST, -2, 2)
-            .addNegativeEffect(PotionEffectType.SLOWNESS_FALLING, 2, 2)
+            .addNegativeEffect(PotionEffectType.SLOW_FALLING, 2, 2)
             .addNegativeEffect(PotionEffectType.SLOWNESS, 2, 2)
             .addNegativeEffect(PotionEffectType.MINING_FATIGUE, 2, 2);
         setSpellCore(spellCoreBuilder.build());
