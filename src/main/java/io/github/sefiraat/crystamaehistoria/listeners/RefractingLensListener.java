@@ -13,6 +13,7 @@ import io.github.sefiraat.crystamaehistoria.utils.Skulls;
 import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,7 +44,7 @@ public class RefractingLensListener implements Listener {
         ) {
             e.setCancelled(true);
             GeneralUtils.putOnCooldown(player.getInventory().getItemInMainHand(), 3);
-            SlimefunItem item = StorageCacheUtils.getSlimefunItem(block.getLocation());
+            SlimefunItem item = SlimefunStorageUtils.getSlimefunItem(block.getLocation());
             if (item instanceof LiquefactionBasin) {
                 liquefactionBasin(player, item, block);
             } else if (item instanceof ExpCollector) {
