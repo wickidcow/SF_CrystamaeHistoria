@@ -46,8 +46,8 @@ public class SatchelListener implements Listener {
                     }
 
                     if (crystamageSatchel.tryAddItem(possibleSatchel, itemStack, crystal)) {
-                        final java.awt.Color baseColor = ThemeType.getByType(crystal.getType()).getColor().getColor();
-                        final Color color = Color.fromRGB(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue());
+                        final var baseColor = ThemeType.getByType(crystal.getType()).getComponentColor();
+                        final Color color = Color.fromRGB(baseColor.red(), baseColor.green(), baseColor.blue());
                         final Particle.DustOptions dustOptions = new Particle.DustOptions(color, 1);
 
                         ParticleUtils.displayParticleEffect(item, 0.4, 10, dustOptions);
