@@ -22,9 +22,6 @@ import io.github.sefiraat.crystamaehistoria.slimefun.items.tools.plates.ChargedP
 import io.github.sefiraat.crystamaehistoria.slimefun.items.tools.satchel.CrystamageSatchel;
 import io.github.sefiraat.crystamaehistoria.slimefun.items.tools.stave.Stave;
 import io.github.sefiraat.crystamaehistoria.stories.definition.StoryType;
-import io.github.sefiraat.networks.slimefun.NetworksSlimefunItemStacks;
-import io.github.sefiraat.networks.slimefun.network.NetworkBridge;
-import io.github.sefiraat.networks.slimefun.network.NetworkMonitor;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
@@ -633,27 +630,31 @@ public class Tools {
         }
 
         if (SupportedPluginManager.isNetworks()) {
+            final SlimefunItem networkBridge = SlimefunItem.getById("NTW_BRIDGE");
+            final SlimefunItem networkMonitor = SlimefunItem.getById("NTW_MONITOR");
 
-            // Networks Cover
-            RecipeItem networksCoverRecipe = new RecipeItem(
-                NetworksSlimefunItemStacks.NETWORK_BRIDGE,
-                StoryType.MECHANICAL, 10,
-                StoryType.HUMAN, 10,
-                StoryType.VOID, 10
-            );
-            networkNodeCover = new BlockVeil(
-                ItemGroups.TOOLS,
-                CrystaStacks.NETWORKS_COVER,
-                CrystaRecipeTypes.LIQUEFACTION_CRAFTING,
-                networksCoverRecipe.getDisplayRecipe(),
-                CrystaStacks.NETWORKS_COVER.asQuantity(8),
-                NetworkBridge.class,
-                NetworkMonitor.class
-            );
+            if (networkBridge != null && networkMonitor != null) {
+                RecipeItem networksCoverRecipe = new RecipeItem(
+                    networkBridge.getItem(),
+                    StoryType.MECHANICAL, 10,
+                    StoryType.HUMAN, 10,
+                    StoryType.VOID, 10
+                );
+                networkNodeCover = new BlockVeil(
+                    ItemGroups.TOOLS,
+                    CrystaStacks.NETWORKS_COVER,
+                    CrystaRecipeTypes.LIQUEFACTION_CRAFTING,
+                    networksCoverRecipe.getDisplayRecipe(),
+                    CrystaStacks.NETWORKS_COVER.asQuantity(8),
+                    "NTW_BRIDGE",
+                    "NTW_MONITOR"
+                );
 
-            networkNodeCover.register(plugin);
-
-            LiquefactionBasinCache.addCraftingRecipe(networkNodeCover, networksCoverRecipe);
+                networkNodeCover.register(plugin);
+                LiquefactionBasinCache.addCraftingRecipe(networkNodeCover, networksCoverRecipe);
+            } else {
+                plugin.getLogger().warning("Networks was detected but NTW_BRIDGE/NTW_MONITOR were not registered; skipping the Networks cover.");
+            }
         }
     }
 }
