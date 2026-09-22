@@ -8,7 +8,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockBreakHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.block.Block;
@@ -54,7 +54,7 @@ public class MobLamp extends SlimefunItem {
                 }
 
                 @Override
-                public void tick(Block block, SlimefunItem slimefunItem, Config config) {
+                public void tick(Block block, SlimefunItem slimefunItem, SlimefunBlockData config) {
                     for (Monster monster : block.getWorld().getNearbyEntitiesByType(Monster.class, block.getLocation(), radius)) {
                         UUID uuid = UUID.fromString(BlockStorage.getLocationInfo(block.getLocation(), "CH_UUID"));
                         GeneralUtils.pushEntity(
