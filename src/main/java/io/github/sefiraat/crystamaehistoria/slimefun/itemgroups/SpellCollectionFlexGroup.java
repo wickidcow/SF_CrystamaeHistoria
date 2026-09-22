@@ -19,7 +19,6 @@ import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -252,8 +251,8 @@ public class SpellCollectionFlexGroup extends FlexItemGroup {
     @ParametersAreNonnullByDefault
     private ItemStack getBasicStack(Spell spell) {
         final SpellCore spellCore = spell.getSpellCore();
-        final ChatColor color = ThemeType.CLICK_INFO.getColor();
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
+        final String color = ThemeType.CLICK_INFO.getColor();
+        final String passive = ThemeType.PASSIVE.getColor();
 
         final String crysta = MessageFormat.format("{0}Crysta Cost per Cast: {1}{2}", color, passive, spellCore.getCrystaCost());
         final String crystaMulti = MessageFormat.format("{0}Crysta cost {1} with stave tier", color, spellCore.isDamageMultiplied() ? "increases" : "doesn't increase");
@@ -274,8 +273,8 @@ public class SpellCollectionFlexGroup extends FlexItemGroup {
     @ParametersAreNonnullByDefault
     private ItemStack getValuesStack(Spell spell) {
         final SpellCore spellCore = spell.getSpellCore();
-        final ChatColor color = ThemeType.CLICK_INFO.getColor();
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
+        final String color = ThemeType.CLICK_INFO.getColor();
+        final String passive = ThemeType.PASSIVE.getColor();
         final List<String> lore = new ArrayList<>();
 
         final String damageMessage = MessageFormat.format("{0}Damage: {1}{2}", color, passive, spellCore.getDamageAmount());
@@ -308,9 +307,9 @@ public class SpellCollectionFlexGroup extends FlexItemGroup {
     @ParametersAreNonnullByDefault
     private ItemStack getCastTypeStack(Spell spell) {
         final SpellCore spellCore = spell.getSpellCore();
-        final ChatColor color = ThemeType.CLICK_INFO.getColor();
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
-        final ChatColor notice = ThemeType.NOTICE.getColor();
+        final String color = ThemeType.CLICK_INFO.getColor();
+        final String passive = ThemeType.PASSIVE.getColor();
+        final String notice = ThemeType.NOTICE.getColor();
         final List<String> lore = new ArrayList<>();
 
         final int ticks = spellCore.getNumberOfTicks();
@@ -358,8 +357,8 @@ public class SpellCollectionFlexGroup extends FlexItemGroup {
 
     @ParametersAreNonnullByDefault
     private ItemStack getRangeStack(Spell spell) {
-        final ChatColor color = ThemeType.CLICK_INFO.getColor();
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
+        final String color = ThemeType.CLICK_INFO.getColor();
+        final String passive = ThemeType.PASSIVE.getColor();
         final List<String> lore = new ArrayList<>();
 
         final String message = MessageFormat.format("{0}Range: {1}{2}", color, passive, spell.getSpellCore().getRange());
@@ -382,8 +381,8 @@ public class SpellCollectionFlexGroup extends FlexItemGroup {
 
     @ParametersAreNonnullByDefault
     private ItemStack getKnockBackStack(Spell spell) {
-        final ChatColor color = ThemeType.CLICK_INFO.getColor();
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
+        final String color = ThemeType.CLICK_INFO.getColor();
+        final String passive = ThemeType.PASSIVE.getColor();
         final List<String> lore = new ArrayList<>();
 
         final String message = MessageFormat.format("{0}Knockback: {1}{2}", color, passive, spell.getSpellCore().getKnockbackAmount());
@@ -407,8 +406,8 @@ public class SpellCollectionFlexGroup extends FlexItemGroup {
     @ParametersAreNonnullByDefault
     private ItemStack getProjectileStack(Spell spell) {
         final SpellCore spellCore = spell.getSpellCore();
-        final ChatColor color = ThemeType.CLICK_INFO.getColor();
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
+        final String color = ThemeType.CLICK_INFO.getColor();
+        final String passive = ThemeType.PASSIVE.getColor();
 
         final String aoeMessage = MessageFormat.format("{0}Projectile AoE: {1}{2}", color, passive, spellCore.getProjectileAoeRange());
         final String aoeMultiMessage = MessageFormat.format("{0}AoE {1} with stave tier", passive, spellCore.isProjectileAoeMultiplied() ? "increases" : "doesn't increase");
@@ -437,8 +436,8 @@ public class SpellCollectionFlexGroup extends FlexItemGroup {
     @ParametersAreNonnullByDefault
     private ItemStack getEffectsStack(Spell spell) {
         final SpellCore spellCore = spell.getSpellCore();
-        final ChatColor color = ThemeType.CLICK_INFO.getColor();
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
+        final String color = ThemeType.CLICK_INFO.getColor();
+        final String passive = ThemeType.PASSIVE.getColor();
         final List<String> lore = new ArrayList<>();
 
         if (spellCore.isEffectingSpell()) {
@@ -503,8 +502,8 @@ public class SpellCollectionFlexGroup extends FlexItemGroup {
 
     @ParametersAreNonnullByDefault
     private ItemStack getStatsStack(Player player) {
-        final ChatColor color = ThemeType.CLICK_INFO.getColor();
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
+        final String color = ThemeType.CLICK_INFO.getColor();
+        final String passive = ThemeType.PASSIVE.getColor();
         final List<String> lore = new ArrayList<>();
         final SpellRank spellRank = PlayerStatistics.getSpellRank(player.getUniqueId());
 
