@@ -72,7 +72,7 @@ public class PhilosophersStone extends Spell {
             } else {
                 material = MATERIALS_COMMON.get(ThreadLocalRandom.current().nextInt(0, MATERIALS_COMMON.size()));
             }
-            final List<Integer> list = (List<Integer>) CrystamaeHistoria.getConfigManager().getBlockColors().getList(material.name());
+            final List<Integer> list = CrystamaeHistoria.getConfigManager().getBlockColors().getIntegerList(material.name());
             final Color color = Color.fromRGB(list.get(0), list.get(1), list.get(2));
             final Particle.DustOptions dustOptionsToBlock = new Particle.DustOptions(color, 1);
             ParticleUtils.drawCube(dustOptionsToBlock, location, location.clone().add(1, 1, 1), 0.25);
