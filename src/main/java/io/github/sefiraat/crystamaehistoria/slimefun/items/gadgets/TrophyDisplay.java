@@ -19,11 +19,12 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import net.kyori.adventure.text.Component;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -83,7 +84,7 @@ public class TrophyDisplay extends Stand {
                 }
                 currentItem.remove();
             }
-            BlockStorage.addBlockInfo(blockClicked, PDC_ITEM, null);
+            SlimefunStorageUtils.removeData(blockClicked.getLocation(), PDC_ITEM);
             itemMap.remove(blockClicked.getLocation());
             this.locationConsumer = null;
             return;
@@ -111,7 +112,7 @@ public class TrophyDisplay extends Stand {
                 final String materialName = TextUtils.toTitleCase(material.toString());
 
                 itemStack.setAmount(itemStack.getAmount() - 1);
-                itemMeta.setDisplayName(ThemeType.RANK_BLOCK_SME.getColor() + materialName + " Trophy");
+                itemMeta.displayName(Component.text(materialName + " Trophy", ThemeType.RANK_BLOCK_SME.getComponentColor()));
                 clone.setItemMeta(itemMeta);
                 addItem(blockClicked, clone, ThemeType.RANK_BLOCK_SME.getColor() + materialName);
                 this.locationConsumer = this::defaultConsumer;
@@ -122,7 +123,7 @@ public class TrophyDisplay extends Stand {
     private void addItem(Block block, ItemStack itemStack, String name) {
         final Location location = block.getLocation().add(0.5, 1.5, 0.5);
         Item item = GeneralUtils.spawnDisplayItem(itemStack.asQuantity(1), location, name);
-        BlockStorage.addBlockInfo(block, PDC_ITEM, item.getUniqueId().toString());
+        SlimefunStorageUtils.setData(block.getLocation(), PDC_ITEM, item.getUniqueId().toString());
         itemMap.put(block.getLocation(), item.getUniqueId());
     }
 
