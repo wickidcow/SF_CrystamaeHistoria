@@ -7,7 +7,6 @@ import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.LoreBuilder;
 import lombok.experimental.UtilityClass;
-import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +15,11 @@ import java.text.MessageFormat;
 
 @UtilityClass
 public class CrystaStacks {
+
+    private static final String LEGACY_YELLOW = "§e";
+    private static final String LEGACY_GRAY = "§7";
+    private static final String LEGACY_DARK_BLUE = "§1";
+    private static final String LEGACY_RED = "§c";
 
     // Materials
     public static final SlimefunItemStack CRYSTAL_BLANK;
@@ -442,7 +446,7 @@ public class CrystaStacks {
             "A refined crafting material.",
             "Can be used as bone meal.",
             "",
-            ChatColor.YELLOW + "250 Uses " + ChatColor.GRAY + "left"
+            LEGACY_YELLOW + "250 Uses " + LEGACY_GRAY + "left"
         );
 
         MAGICAL_MILK = ThemeType.themedSlimefunItemStack(
@@ -1992,8 +1996,8 @@ public class CrystaStacks {
             "details if available.",
             "",
             ThemeType.CLICK_INFO.getColor() + "Works with:",
-            ChatColor.DARK_BLUE + "Liquefaction Basin",
-            ChatColor.DARK_BLUE + "Exp Collector"
+            LEGACY_DARK_BLUE + "Liquefaction Basin",
+            LEGACY_DARK_BLUE + "Exp Collector"
         );
 
         THAUMATURGIC_SALTS = ThemeType.themedSlimefunItemStack(
@@ -2050,7 +2054,7 @@ public class CrystaStacks {
             "light source.",
             "Shift Right click to scoop back.",
             "",
-            ChatColor.YELLOW + "25 Uses " + ChatColor.GRAY + "left"
+            LEGACY_YELLOW + "25 Uses " + LEGACY_GRAY + "left"
         );
 
         BRILLIANCE_SCOOP = ThemeType.themedSlimefunItemStack(
@@ -2062,7 +2066,7 @@ public class CrystaStacks {
             "light source.",
             "Shift Right click to scoop back.",
             "",
-            ChatColor.YELLOW + "75 Uses " + ChatColor.GRAY + "left"
+            LEGACY_YELLOW + "75 Uses " + LEGACY_GRAY + "left"
         );
 
         LUSTRE_SCOOP = ThemeType.themedSlimefunItemStack(
@@ -2074,7 +2078,7 @@ public class CrystaStacks {
             "light source.",
             "Shift Right click to scoop back.",
             "",
-            ChatColor.YELLOW + "250 Uses " + ChatColor.GRAY + "left"
+            LEGACY_YELLOW + "250 Uses " + LEGACY_GRAY + "left"
         );
 
         RADIANCE_SCOOP = ThemeType.themedSlimefunItemStack(
@@ -2087,7 +2091,7 @@ public class CrystaStacks {
             "Shift Right click to scoop back.",
             "Left click to change the light level.",
             "",
-            ChatColor.YELLOW + "500 Uses " + ChatColor.GRAY + "left"
+            LEGACY_YELLOW + "500 Uses " + LEGACY_GRAY + "left"
         );
 
         CONNECTING_COMPASS = ThemeType.themedSlimefunItemStack(
@@ -2111,11 +2115,11 @@ public class CrystaStacks {
             "This pick has been imbued with",
             "spiritual energies that allow it",
             "to keep certain items whole.",
-            ChatColor.RED + "Only works on blocks that do",
-            ChatColor.RED + "not normally drop themselves",
-            ChatColor.RED + "both with and without silk.",
+            LEGACY_RED + "Only works on blocks that do",
+            LEGACY_RED + "not normally drop themselves",
+            LEGACY_RED + "both with and without silk.",
             "",
-            ChatColor.YELLOW + "50 Uses " + ChatColor.GRAY + "left"
+            LEGACY_YELLOW + "50 Uses " + LEGACY_GRAY + "left"
         );
 
         INCORPOREAL_SILKEN = ThemeType.themedSlimefunItemStack(
@@ -2126,11 +2130,11 @@ public class CrystaStacks {
             "This pick has been imbued with",
             "spiritual energies that allow it",
             "to keep certain items whole.",
-            ChatColor.RED + "Only works on blocks that do",
-            ChatColor.RED + "not normally drop themselves",
-            ChatColor.RED + "both with and without silk.",
+            LEGACY_RED + "Only works on blocks that do",
+            LEGACY_RED + "not normally drop themselves",
+            LEGACY_RED + "both with and without silk.",
             "",
-            ChatColor.YELLOW + "1000 Uses " + ChatColor.GRAY + "left"
+            LEGACY_YELLOW + "1000 Uses " + LEGACY_GRAY + "left"
         );
 
         SIMPLE_DISPLACER = ThemeType.themedSlimefunItemStack(
@@ -2142,7 +2146,7 @@ public class CrystaStacks {
             "things out of this world and",
             "replace it with something from",
             "another dimension.",
-            ChatColor.YELLOW + "50 Uses " + ChatColor.GRAY + "left"
+            LEGACY_YELLOW + "50 Uses " + LEGACY_GRAY + "left"
         );
 
         ARCANE_DISPLACER = ThemeType.themedSlimefunItemStack(
@@ -2154,7 +2158,7 @@ public class CrystaStacks {
             "things out of this world and",
             "replace it with something from",
             "another dimension.",
-            ChatColor.YELLOW + "500 Uses " + ChatColor.GRAY + "left"
+            LEGACY_YELLOW + "500 Uses " + LEGACY_GRAY + "left"
         );
 
         SPONGE_BALMY = ThemeType.themedSlimefunItemStack(
