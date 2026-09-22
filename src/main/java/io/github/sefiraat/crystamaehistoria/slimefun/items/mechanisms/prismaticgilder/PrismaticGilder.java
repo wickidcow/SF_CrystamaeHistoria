@@ -7,7 +7,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import lombok.Getter;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import org.bukkit.Location;
@@ -50,10 +50,12 @@ public class PrismaticGilder extends TickingMenuBlock {
             @Override
             public void onPlayerPlace(@Nonnull BlockPlaceEvent event) {
                 final Location location = event.getBlockPlaced().getLocation();
-                final PrismaticGilderCache cache = new PrismaticGilderCache(BlockStorage.getInventory(location), 5);
-
-                cache.setActivePlayer(event.getPlayer());
-                cacheMap.put(location, cache);
+                final BlockMenu menu = SlimefunStorageUtils.getMenu(location);
+                if (menu != null) {
+                    final PrismaticGilderCache cache = new PrismaticGilderCache(menu, 5);
+                    cache.setActivePlayer(event.getPlayer());
+                    cacheMap.put(location, cache);
+                }
             }
         };
     }
@@ -132,7 +134,7 @@ public class PrismaticGilder extends TickingMenuBlock {
         super.onNewInstance(blockMenu, b);
         if (!cacheMap.containsKey(blockMenu.getLocation())) {
             PrismaticGilderCache cache = new PrismaticGilderCache(blockMenu, 5);
-            String s = BlockStorage.getLocationInfo(blockMenu.getLocation(), PrismaticGilderCache.AMOUNT);
+            String s = SlimefunStorageUtils.getData(blockMenu.getLocation(), PrismaticGilderCache.AMOUNT);
             if (s != null) {
                 cache.setFillAmount(Integer.parseInt(s));
             }
