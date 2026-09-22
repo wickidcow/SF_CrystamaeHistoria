@@ -25,8 +25,9 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import lombok.Getter;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -69,7 +70,7 @@ public class LiquefactionBasinCache extends DisplayStandHolder {
         super(blockMenu);
         this.maxVolume = maxVolume;
 
-        final String activePlayerString = BlockStorage.getLocationInfo(blockMenu.getLocation(), Keys.BS_CP_ACTIVE_PLAYER);
+        final String activePlayerString = StorageCacheUtils.getData(blockMenu.getLocation(), Keys.BS_CP_ACTIVE_PLAYER);
         if (activePlayerString != null) {
             this.activePlayer = UUID.fromString(activePlayerString);
         }
@@ -211,7 +212,7 @@ public class LiquefactionBasinCache extends DisplayStandHolder {
 
     public void syncBlock() {
         for (Map.Entry<StoryType, Integer> e : contentMap.entrySet()) {
-            BlockStorage.addBlockInfo(blockMenu.getBlock(), CH_LEVEL_PREFIX + e.getKey(), String.valueOf(e.getValue()));
+            StorageCacheUtils.setData(blockMenu.getLocation(), CH_LEVEL_PREFIX + e.getKey(), String.valueOf(e.getValue()));
         }
     }
 
@@ -353,9 +354,13 @@ public class LiquefactionBasinCache extends DisplayStandHolder {
     }
 
     private boolean canCraftSatchel(ItemStack incomingItem) {
-        List<String> lore = incomingItem.getItemMeta().getLore();
-        for (String s : lore) {
-            if (s.equals("§7ID: <ID>")) {
+        List<Component> lore = incomingItem.getItemMeta().lore();
+        if (lore == null) {
+            return false;
+        }
+        final LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
+        for (Component line : lore) {
+            if (serializer.serialize(line).equals("§7ID: <ID>")) {
                 return true;
             }
         }
