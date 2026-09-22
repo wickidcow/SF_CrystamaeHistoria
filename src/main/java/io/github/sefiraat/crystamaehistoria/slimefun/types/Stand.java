@@ -9,7 +9,7 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import lombok.Getter;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -51,7 +51,7 @@ public abstract class Stand extends TickingBlockNoGui {
     @ParametersAreNonnullByDefault
     protected void onFirstTick(Block block, SlimefunItem slimefunItem, SlimefunBlockData config) {
         final Location blockLocation = block.getLocation();
-        String itemUuidString = BlockStorage.getLocationInfo(block.getLocation(), PDC_ITEM);
+        String itemUuidString = SlimefunStorageUtils.getData(block.getLocation(), PDC_ITEM);
         if (itemUuidString != null) {
             itemMap.put(block.getLocation(), UUID.fromString(itemUuidString));
         }
@@ -86,7 +86,7 @@ public abstract class Stand extends TickingBlockNoGui {
                 if (itemLocation.distance(desiredLocation) > 0.3) {
                     final ItemStack itemStack = currentItem.getItemStack();
                     blockLocation.getWorld().dropItemNaturally(blockLocation, itemStack);
-                    BlockStorage.addBlockInfo(block, PDC_ITEM, null);
+                    SlimefunStorageUtils.removeData(block.getLocation(), PDC_ITEM);
                     itemMap.remove(blockLocation);
                     currentItem.remove();
                 }
@@ -121,7 +121,7 @@ public abstract class Stand extends TickingBlockNoGui {
                 location.getWorld().dropItemNaturally(location, displayStack);
                 currentItem.remove();
             }
-            BlockStorage.clearBlockInfo(location);
+            SlimefunStorageUtils.removeData(location, PDC_ITEM);
         }
     }
 
