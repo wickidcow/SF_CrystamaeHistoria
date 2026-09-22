@@ -75,8 +75,8 @@ public class Bobulate extends Spell {
                         processBlock(caster, block, SlimefunTag.CONCRETE_POWDERS);
                     } else if (CrystaTag.CONCRETE_BLOCKS.isTagged(material)) {
                         processBlock(caster, block, CrystaTag.CONCRETE_BLOCKS);
-                    } else if (Tag.CARPETS.isTagged(material)) {
-                        processBlock(caster, block, Tag.CARPETS);
+                    } else if (Tag.WOOL_CARPETS.isTagged(material)) {
+                        processBlock(caster, block, Tag.WOOL_CARPETS);
                     }
                 }
             }
