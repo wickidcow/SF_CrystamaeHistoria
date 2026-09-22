@@ -62,7 +62,7 @@ public class PoisonNova extends Spell {
                 castInformation.getStaveLevel()
             );
             hit.addPotionEffect(potionEffect);
-            setLastDamageToCaster(hit, castInformation);
+            hit.setKiller(castInformation.getCasterAsPlayer());
         }
     }
 
