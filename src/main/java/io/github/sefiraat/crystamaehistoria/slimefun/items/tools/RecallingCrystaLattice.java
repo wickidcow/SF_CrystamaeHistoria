@@ -56,7 +56,8 @@ public class RecallingCrystaLattice extends SlimefunItem {
 
         if (blockOptional.isPresent()) {
             final Block block = blockOptional.get();
-            final SlimefunItem slimefunItem = StorageCacheUtils.getSlimefunItem(block.getLocation());
+            final var blockData = StorageCacheUtils.getBlock(block.getLocation());
+            final SlimefunItem slimefunItem = blockData == null ? null : SlimefunItem.getById(blockData.getSfId());
             final Location location = block.getLocation();
             final Player player = event.getPlayer();
 
