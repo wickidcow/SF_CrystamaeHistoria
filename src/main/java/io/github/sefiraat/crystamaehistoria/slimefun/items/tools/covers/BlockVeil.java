@@ -43,7 +43,8 @@ public class BlockVeil extends SlimefunItem {
             e.cancel();
             if (e.getClickedBlock().isPresent()) {
                 Block block = e.getClickedBlock().get();
-                SlimefunItem slimefunItem = StorageCacheUtils.getSlimefunItem(block.getLocation());
+                final var blockData = StorageCacheUtils.getBlock(block.getLocation());
+                SlimefunItem slimefunItem = blockData == null ? null : SlimefunItem.getById(blockData.getSfId());
                 ItemStack offhand = e.getPlayer().getInventory().getItemInOffHand();
 
                 if (slimefunItem == null) {
