@@ -8,9 +8,9 @@ import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.blocks.BlockPosition;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nonnull;
@@ -88,13 +88,13 @@ public class Story {
     }
 
     public String getDisplayName() {
-        final TextComponent rarityComponent = new TextComponent(getDisplayRarity());
-        final TextComponent nameComponent = new TextComponent(this.id);
-
-        rarityComponent.setColor(ThemeType.getByRarity(this.rarity).getColor());
-        rarityComponent.setBold(true);
-        nameComponent.setColor(ThemeType.CLICK_INFO.getColor());
-        return BaseComponent.toLegacyText(rarityComponent, nameComponent);
+        final Component displayName = Component.text(
+            getDisplayRarity(),
+            ThemeType.getByRarity(this.rarity).getComponentColor()
+        ).decorate(TextDecoration.BOLD).append(
+            Component.text(this.id, ThemeType.CLICK_INFO.getComponentColor())
+        );
+        return LegacyComponentSerializer.legacySection().serialize(displayName);
     }
 
     public String getDisplayRarity() {
@@ -102,15 +102,13 @@ public class Story {
     }
 
     public List<String> getStoryLore() {
-        final ChatColor passive = ThemeType.PASSIVE.getColor();
         final List<String> l = new ArrayList<>();
+        final LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
 
         for (String s : storyStrings) {
-            final TextComponent line = new TextComponent(s);
-
-            line.setColor(passive);
-            line.setItalic(false);
-            l.add(BaseComponent.toLegacyText(line));
+            final Component line = Component.text(s, ThemeType.PASSIVE.getComponentColor())
+                .decoration(TextDecoration.ITALIC, false);
+            l.add(serializer.serialize(line));
         }
         if (author != null) {
             l.add("");
