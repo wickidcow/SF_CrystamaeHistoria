@@ -58,6 +58,7 @@ public class StaveConfigurator extends MenuBlock {
     }
 
     @Override
+    @SuppressWarnings("deprecation") // Slimefun BlockMenuPreset still exposes CSCoreLib ClickAction in its public callback API.
     @ParametersAreNonnullByDefault
     protected void setup(BlockMenuPreset blockMenuPreset) {
         blockMenuPreset.drawBackground(GuiElements.MENU_BACKGROUND, BACKGROUND_SLOTS);
@@ -73,6 +74,7 @@ public class StaveConfigurator extends MenuBlock {
     }
 
     @Override
+    @SuppressWarnings("deprecation") // Slimefun BlockMenu still exposes CSCoreLib ClickAction in its public callback API.
     @ParametersAreNonnullByDefault
     protected void onNewInstance(BlockMenu blockMenu, Block b) {
         super.onNewInstance(blockMenu, b);
