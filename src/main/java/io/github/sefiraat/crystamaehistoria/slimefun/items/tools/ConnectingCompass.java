@@ -8,7 +8,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -20,7 +19,6 @@ import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.text.MessageFormat;
 
 public class ConnectingCompass extends SlimefunItem {
 
@@ -48,7 +46,7 @@ public class ConnectingCompass extends SlimefunItem {
 
             if (player.isSneaking()) {
                 player.sendMessage(
-                    MessageFormat.format("{0}Type a name for this location in chat.", ChatColor.LIGHT_PURPLE)
+                    net.kyori.adventure.text.Component.text("Type a name for this location in chat.").color(net.kyori.adventure.text.format.NamedTextColor.LIGHT_PURPLE)
                 );
                 ChatUtils.awaitInput(player, s -> nameAndSet(s, itemStack, player.getEyeLocation()));
             } else {
@@ -82,7 +80,7 @@ public class ConnectingCompass extends SlimefunItem {
                 CompassMeta compassMeta = (CompassMeta) itemMeta;
                 compassMeta.setLodestone(location);
                 compassMeta.setLodestoneTracked(false);
-                compassMeta.setDisplayName(ThemeType.TOOL.getColor() + s);
+                compassMeta.displayName(net.kyori.adventure.text.Component.text(s).color(ThemeType.TOOL.getComponentColor()));
                 itemStack.setItemMeta(compassMeta);
             }
         }
