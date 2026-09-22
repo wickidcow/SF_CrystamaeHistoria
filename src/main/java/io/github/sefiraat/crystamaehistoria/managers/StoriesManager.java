@@ -12,7 +12,9 @@ import io.github.sefiraat.crystamaehistoria.utils.StoryUtils;
 import io.github.sefiraat.crystamaehistoria.utils.TextUtils;
 import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import lombok.Getter;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -240,23 +242,27 @@ public class StoriesManager {
     public static void rebuildStoriedStack(ItemStack itemStack) {
         ItemMeta im = itemStack.getItemMeta();
         setName(itemStack, im);
-        List<String> lore = new ArrayList<>();
-        List<Story> storyList = StoryUtils.getAllStories(itemStack);
+        final LegacyComponentSerializer serializer = LegacyComponentSerializer.legacySection();
+        final List<Component> lore = new ArrayList<>();
+        final List<Story> storyList = StoryUtils.getAllStories(itemStack);
         for (Story story : storyList) {
-            lore.add("");
-            lore.add(story.getDisplayName());
-            lore.addAll(story.getStoryLore());
+            lore.add(Component.empty());
+            lore.add(serializer.deserialize(story.getDisplayName()));
+            for (String line : story.getStoryLore()) {
+                lore.add(serializer.deserialize(line));
+            }
         }
-        im.setLore(lore);
+        im.lore(lore);
         itemStack.setItemMeta(im);
     }
 
     @ParametersAreNonnullByDefault
     private static void setName(ItemStack itemStack, ItemMeta im) {
-        TextComponent name = new TextComponent("Storied " + TextUtils.toTitleCase(itemStack.getType().toString()));
-        name.setColor(ThemeType.MAIN.getColor());
-        name.setBold(true);
-        im.setDisplayName(name.toLegacyText());
+        final Component name = Component.text("Storied " + TextUtils.toTitleCase(itemStack.getType().toString()))
+            .color(ThemeType.MAIN.getComponentColor())
+            .decorate(TextDecoration.BOLD)
+            .decoration(TextDecoration.ITALIC, false);
+        im.displayName(name);
     }
 
     @ParametersAreNonnullByDefault
