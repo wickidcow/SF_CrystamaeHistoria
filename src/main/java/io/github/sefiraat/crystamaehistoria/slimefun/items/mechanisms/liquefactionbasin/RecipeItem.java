@@ -5,6 +5,7 @@ import io.github.sefiraat.crystamaehistoria.stories.definition.StoryType;
 import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -13,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -85,9 +85,11 @@ public class RecipeItem {
     public ItemStack getDisplayCrystal(int index) {
         ItemStack itemStack = Materials.getDummyCrystalMap().get(storyTypes.get(index)).getItem().clone();
         ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> list = new ArrayList<>();
-        list.add(ThemeType.CLICK_INFO.getColor() + "Minimum amount: " + ThemeType.PASSIVE.getColor() + amounts.get(index));
-        itemMeta.setLore(list);
+        itemMeta.lore(List.of(
+            Component.text("Minimum amount: ")
+                .color(ThemeType.CLICK_INFO.getComponentColor())
+                .append(Component.text(amounts.get(index)).color(ThemeType.PASSIVE.getComponentColor()))
+        ));
         itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
