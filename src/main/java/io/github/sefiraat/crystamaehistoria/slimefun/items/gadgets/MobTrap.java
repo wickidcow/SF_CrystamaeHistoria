@@ -14,6 +14,8 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -23,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -30,6 +33,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 import java.util.Optional;
 
 public class MobTrap extends TickingBlockNoGui {
@@ -60,9 +64,11 @@ public class MobTrap extends TickingBlockNoGui {
             if (itemStack.getType() == Material.POTION && optionalBlock.isPresent()) {
                 final Block block = optionalBlock.get();
                 final PotionMeta potionMeta = (PotionMeta) itemStack.getItemMeta();
-                final PotionEffectType type = potionMeta.getBasePotionData().getType().getEffectType();
-                if (type != null) {
-                    BlockStorage.addBlockInfo(block, "POT_EFF", type.getName());
+                final PotionType potionType = potionMeta.getBasePotionType();
+
+                if (potionType != null && !potionType.getPotionEffects().isEmpty()) {
+                    final PotionEffectType type = potionType.getPotionEffects().get(0).getType();
+                    BlockStorage.addBlockInfo(block, "POT_EFF", type.getKey().toString());
                     potionEffectTypeMap.put(block.getLocation(), type);
                     itemStack.setAmount(itemStack.getAmount() - 1);
                 }
@@ -74,10 +80,14 @@ public class MobTrap extends TickingBlockNoGui {
     protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         String potionEffectString = BlockStorage.getLocationInfo(block.getLocation(), "POT_EFF");
         if (potionEffectString != null) {
-            potionEffectTypeMap.put(
-                block.getLocation(),
-                PotionEffectType.getByName(potionEffectString)
-            );
+            final String normalizedKey = potionEffectString.contains(":")
+                ? potionEffectString.toLowerCase(Locale.ROOT)
+                : "minecraft:" + potionEffectString.toLowerCase(Locale.ROOT);
+            final NamespacedKey key = NamespacedKey.fromString(normalizedKey);
+            final PotionEffectType type = key == null ? null : Registry.POTION_EFFECT_TYPE.get(key);
+            if (type != null) {
+                potionEffectTypeMap.put(block.getLocation(), type);
+            }
         }
     }
 
