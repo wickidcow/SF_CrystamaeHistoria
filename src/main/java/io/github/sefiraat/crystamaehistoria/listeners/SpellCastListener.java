@@ -10,8 +10,7 @@ import io.github.sefiraat.crystamaehistoria.utils.datatypes.DataTypeMethods;
 import io.github.sefiraat.crystamaehistoria.utils.datatypes.PersistentStaveDataType;
 import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,13 +44,15 @@ public class SpellCastListener implements Listener {
                 );
                 stack.setItemMeta(itemMeta);
                 staveInstance.buildLore();
-                player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(
-                    ThemeType.SUCCESS.getColor() + "Casting spell: " + castInformation.getSpellType().getId()
+                player.sendActionBar(Component.text(
+                    "Casting spell: " + castInformation.getSpellType().getId(),
+                    ThemeType.SUCCESS.getComponentColor()
                 ));
             } else {
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(
-                    ThemeType.WARNING.getColor() + "Cast failed: " + castResult.getMessage())
-                );
+                player.sendActionBar(Component.text(
+                    "Cast failed: " + castResult.getMessage(),
+                    ThemeType.WARNING.getComponentColor()
+                ));
             }
         }
     }
