@@ -8,7 +8,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -71,7 +71,7 @@ public class MobTrap extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         String potionEffectString = BlockStorage.getLocationInfo(block.getLocation(), "POT_EFF");
         if (potionEffectString != null) {
             potionEffectTypeMap.put(
@@ -82,7 +82,7 @@ public class MobTrap extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         final Location location = block.getLocation().add(0.5, 0.5, 0.5);
         final Particle.DustOptions dustOptions = new Particle.DustOptions(Color.AQUA, 1);
         final Collection<Entity> entities = location.getWorld().getNearbyEntities(
