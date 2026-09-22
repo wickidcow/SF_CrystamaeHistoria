@@ -27,7 +27,6 @@ import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -356,7 +355,7 @@ public class LiquefactionBasinCache extends DisplayStandHolder {
     private boolean canCraftSatchel(ItemStack incomingItem) {
         List<String> lore = incomingItem.getItemMeta().getLore();
         for (String s : lore) {
-            if (s.equals(ChatColor.GRAY + "ID: <ID>")) {
+            if (s.equals("§7ID: <ID>")) {
                 return true;
             }
         }
