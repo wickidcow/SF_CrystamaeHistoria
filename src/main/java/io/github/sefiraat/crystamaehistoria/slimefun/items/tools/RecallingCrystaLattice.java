@@ -13,10 +13,9 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 import io.github.thebusybiscuit.slimefun4.utils.ChatUtils;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -27,7 +26,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.text.MessageFormat;
 import java.util.Optional;
 
 public class RecallingCrystaLattice extends SlimefunItem {
@@ -58,7 +56,7 @@ public class RecallingCrystaLattice extends SlimefunItem {
 
         if (blockOptional.isPresent()) {
             final Block block = blockOptional.get();
-            final SlimefunItem slimefunItem = BlockStorage.check(block);
+            final SlimefunItem slimefunItem = StorageCacheUtils.getSlimefunItem(block.getLocation());
             final Location location = block.getLocation();
             final Player player = event.getPlayer();
 
@@ -72,7 +70,7 @@ public class RecallingCrystaLattice extends SlimefunItem {
                 container.set(Keys.newKey("location"), DataType.LOCATION, location);
                 itemStack.setItemMeta(itemMeta);
                 player.sendMessage(
-                    MessageFormat.format("{0}Type the name of this Waystone into chat.", ChatColor.LIGHT_PURPLE)
+                    Component.text("Type the name of this Waystone into chat.").color(TextColor.color(255, 85, 255))
                 );
                 ChatUtils.awaitInput(player, s -> renameItem(s, itemStack));
             }
@@ -88,7 +86,7 @@ public class RecallingCrystaLattice extends SlimefunItem {
         if (container.has(Keys.newKey("location"), DataType.LOCATION)) {
             final Location location = container.get(Keys.newKey("location"), DataType.LOCATION);
             final Block block = location.getBlock();
-            final SlimefunItem slimefunItem = BlockStorage.check(block);
+            final SlimefunItem slimefunItem = StorageCacheUtils.getSlimefunItem(block.getLocation());
 
             if (slimefunItem instanceof Waystone
                 && GeneralUtils.hasPermission(event.getPlayer(), location, Interaction.PLACE_BLOCK)
@@ -102,7 +100,7 @@ public class RecallingCrystaLattice extends SlimefunItem {
             }
         } else {
             event.getPlayer().sendMessage(
-                MessageFormat.format("{0}Bind the Lattice to a Waystone using Shift + Right Click.", ChatColor.RED)
+                Component.text("Bind the Lattice to a Waystone using Shift + Right Click.").color(TextColor.color(255, 85, 85))
             );
         }
     }
@@ -112,7 +110,7 @@ public class RecallingCrystaLattice extends SlimefunItem {
         if (itemStack != null) {
             final ItemMeta itemMeta = itemStack.getItemMeta();
 
-            itemMeta.setDisplayName(ThemeType.TOOL.getColor() + s);
+            itemMeta.displayName(Component.text(s).color(ThemeType.TOOL.getComponentColor()));
             itemStack.setItemMeta(itemMeta);
         }
     }
