@@ -153,7 +153,7 @@ public class LiquefactionBasinCache extends DisplayStandHolder {
         int blue = 0;
 
         for (Map.Entry<StoryType, Integer> entry : contentMap.entrySet()) {
-            final Color color = ThemeType.getByType(entry.getKey()).getColor().getColor();
+            final Color color = Color.fromRGB(ThemeType.getByType(entry.getKey()).getComponentColor().value());
             final int additionalAmount = entry.getValue();
             amount += additionalAmount;
             red += color.getRed() * additionalAmount;
