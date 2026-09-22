@@ -75,7 +75,12 @@ public class MagicFallingBlock {
         CrystamaeHistoria.getFallingBlockMap().remove(this);
         FallingBlock fallingBlock = (FallingBlock) Bukkit.getEntity(fallingBlockUUID);
         if (fallingBlock != null) {
-            fallingBlock.remove();
+            fallingBlock.getScheduler().execute(
+                CrystamaeHistoria.getInstance(),
+                fallingBlock::remove,
+                null,
+                1L
+            );
         }
     }
 }

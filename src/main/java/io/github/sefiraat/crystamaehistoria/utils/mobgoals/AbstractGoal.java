@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
@@ -73,8 +72,7 @@ public abstract class AbstractGoal<T extends Mob> implements Goal<T> {
         }
 
         if (getTargetsEnemies()) {
-            final List<LivingEntity> entities = new ArrayList<>(
-                player.getWorld().getNearbyEntitiesByType(
+            final List<LivingEntity> entities = player.getWorld().getNearbyEntitiesByType(
                     getTargetClass(),
                     player.getLocation(),
                     10,
@@ -88,8 +86,10 @@ public abstract class AbstractGoal<T extends Mob> implements Goal<T> {
                             return !testOwner.equals(owner);
                         }
                     }
-                )
-            );
+                ).stream()
+                .filter(LivingEntity.class::isInstance)
+                .map(LivingEntity.class::cast)
+                .toList();
 
             if (!entities.isEmpty()) {
                 LivingEntity random = entities.get(ThreadLocalRandom.current().nextInt(entities.size()));

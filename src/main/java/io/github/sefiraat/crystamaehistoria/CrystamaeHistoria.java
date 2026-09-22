@@ -162,8 +162,8 @@ public class CrystamaeHistoria extends AbstractAddon {
         this.configManager = new ConfigManager();
         this.storiesManager = new StoriesManager();
         this.listenerManager = new ListenerManager();
-        this.runnableManager = new RunnableManager();
         this.spellMemory = new SpellMemory();
+        this.runnableManager = new RunnableManager();
         this.supportedPluginManager = new SupportedPluginManager();
         this.effectManager = new EffectManager(this);
 
@@ -228,6 +228,10 @@ public class CrystamaeHistoria extends AbstractAddon {
 
     @Override
     protected void disable() {
+        if (runnableManager != null) {
+            runnableManager.shutdown();
+        }
+
         for (ChroniclerPanelCache cache : ChroniclerPanel.getCaches().values()) {
             cache.shutdown();
         }

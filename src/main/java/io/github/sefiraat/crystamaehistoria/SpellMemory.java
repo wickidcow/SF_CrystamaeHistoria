@@ -16,40 +16,40 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Set;
 import java.util.UUID;
 
 public class SpellMemory {
 
     @Getter
-    private final Map<MagicProjectile, Pair<CastInformation, Long>> projectileMap = new HashMap<>();
+    private final Map<MagicProjectile, Pair<CastInformation, Long>> projectileMap = new ConcurrentHashMap<>();
     @Getter
-    private final Map<MagicFallingBlock, Pair<CastInformation, Long>> fallingBlockMap = new HashMap<>();
+    private final Map<MagicFallingBlock, Pair<CastInformation, Long>> fallingBlockMap = new ConcurrentHashMap<>();
     @Getter
-    private final Map<UUID, Pair<CastInformation, Long>> strikeMap = new HashMap<>();
+    private final Map<UUID, Pair<CastInformation, Long>> strikeMap = new ConcurrentHashMap<>();
     @Getter
-    private final Map<SpellTickRunnable, Integer> tickingCastables = new HashMap<>();
+    private final Map<SpellTickRunnable, Integer> tickingCastables = new ConcurrentHashMap<>();
     @Getter
-    private final Map<BlockPosition, Long> blocksToRemove = new HashMap<>();
+    private final Map<BlockPosition, Long> blocksToRemove = new ConcurrentHashMap<>();
     @Getter
-    private final Map<MagicSummon, Long> summonedEntities = new HashMap<>();
+    private final Map<MagicSummon, Long> summonedEntities = new ConcurrentHashMap<>();
     @Getter
-    private final Map<UUID, Long> playersWithFlight = new HashMap<>();
+    private final Map<UUID, Long> playersWithFlight = new ConcurrentHashMap<>();
     @Getter
-    private final Map<UUID, Long> playersWithFrozenTime = new HashMap<>();
+    private final Map<UUID, Long> playersWithFrozenTime = new ConcurrentHashMap<>();
     @Getter
-    private final Map<UUID, Long> playersWithFrozenWeather = new HashMap<>();
+    private final Map<UUID, Long> playersWithFrozenWeather = new ConcurrentHashMap<>();
     @Getter
-    private final Map<UUID, Long> inhibitedEndermen = new HashMap<>();
+    private final Map<UUID, Long> inhibitedEndermen = new ConcurrentHashMap<>();
     @Getter
-    private final Map<BoundingBox, Long> noSpawningAreas = new HashMap<>();
+    private final Map<BoundingBox, Long> noSpawningAreas = new ConcurrentHashMap<>();
     @Getter
-    private final Map<DisplayItem, Long> displayItems = new HashMap<>();
+    private final Map<DisplayItem, Long> displayItems = new ConcurrentHashMap<>();
     @Getter
-    private final Map<UUID, Location> sleepingBags = new HashMap<>();
+    private final Map<UUID, Location> sleepingBags = new ConcurrentHashMap<>();
 
     public void clearAll() {
         // Cancels all outstanding spells being cast
@@ -141,8 +141,11 @@ public class SpellMemory {
         final Set<Map.Entry<BlockPosition, Long>> set = new HashSet<>(blocksToRemove.entrySet());
         for (Map.Entry<BlockPosition, Long> entry : set) {
             if (forceRemoveAll || entry.getValue() < time) {
-                entry.getKey().getBlock().setType(Material.AIR);
-                blocksToRemove.remove(entry.getKey());
+                final BlockPosition position = entry.getKey();
+                final Location location = position.getBlock().getLocation();
+                blocksToRemove.remove(position);
+                CrystamaeHistoria.getInstance().getServer().getRegionScheduler()
+                    .execute(CrystamaeHistoria.getInstance(), location, () -> position.getBlock().setType(Material.AIR));
             }
         }
     }
@@ -153,10 +156,17 @@ public class SpellMemory {
         for (Map.Entry<UUID, Long> entry : set) {
             if (forceRemoveAll || entry.getValue() < time) {
                 Player player = Bukkit.getPlayer(entry.getKey());
+                playersWithFlight.remove(entry.getKey());
                 if (player != null) {
-                    player.setAllowFlight(false);
-                    player.setFlying(false);
-                    playersWithFlight.remove(entry.getKey());
+                    player.getScheduler().execute(
+                        CrystamaeHistoria.getInstance(),
+                        () -> {
+                            player.setAllowFlight(false);
+                            player.setFlying(false);
+                        },
+                        null,
+                        1L
+                    );
                 }
             }
         }
@@ -168,9 +178,14 @@ public class SpellMemory {
         for (Map.Entry<UUID, Long> entry : set) {
             if (forceRemoveAll || entry.getValue() < time) {
                 Player player = Bukkit.getPlayer(entry.getKey());
+                playersWithFrozenTime.remove(entry.getKey());
                 if (player != null) {
-                    player.resetPlayerTime();
-                    playersWithFrozenTime.remove(entry.getKey());
+                    player.getScheduler().execute(
+                        CrystamaeHistoria.getInstance(),
+                        player::resetPlayerTime,
+                        null,
+                        1L
+                    );
                 }
             }
         }
@@ -182,9 +197,14 @@ public class SpellMemory {
         for (Map.Entry<UUID, Long> entry : set) {
             if (forceRemoveAll || entry.getValue() < time) {
                 Player player = Bukkit.getPlayer(entry.getKey());
+                playersWithFrozenWeather.remove(entry.getKey());
                 if (player != null) {
-                    player.resetPlayerWeather();
-                    playersWithFrozenWeather.remove(entry.getKey());
+                    player.getScheduler().execute(
+                        CrystamaeHistoria.getInstance(),
+                        player::resetPlayerWeather,
+                        null,
+                        1L
+                    );
                 }
             }
         }
@@ -224,8 +244,9 @@ public class SpellMemory {
     public void removeSleepingBags() {
         final Set<Map.Entry<UUID, Location>> set = new HashSet<>(sleepingBags.entrySet());
         for (Map.Entry<UUID, Location> entry : set) {
-            final Block block = entry.getValue().getBlock();
-            block.setType(Material.AIR);
+            final Location location = entry.getValue();
+            CrystamaeHistoria.getInstance().getServer().getRegionScheduler()
+                .execute(CrystamaeHistoria.getInstance(), location, () -> location.getBlock().setType(Material.AIR));
         }
     }
 

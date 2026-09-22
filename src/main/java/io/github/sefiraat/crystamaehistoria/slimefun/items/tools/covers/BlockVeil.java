@@ -16,11 +16,20 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class BlockVeil extends SlimefunItem {
 
     private final Class<? extends SlimefunItem>[] classToCover;
+    private final String[] itemIdsToCover;
 
     @ParametersAreNonnullByDefault
     public BlockVeil(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, @Nullable ItemStack recipeOutput, Class<? extends SlimefunItem>... classToCover) {
         super(itemGroup, item, recipeType, recipe, recipeOutput);
         this.classToCover = classToCover;
+        this.itemIdsToCover = new String[0];
+    }
+
+    @ParametersAreNonnullByDefault
+    public BlockVeil(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe, @Nullable ItemStack recipeOutput, String... itemIdsToCover) {
+        super(itemGroup, item, recipeType, recipe, recipeOutput);
+        this.classToCover = new Class[0];
+        this.itemIdsToCover = itemIdsToCover;
     }
 
     @Override
@@ -42,18 +51,30 @@ public class BlockVeil extends SlimefunItem {
 
                 for (Class<?> testClass : this.classToCover) {
                     if (testClass.isInstance(slimefunItem)) {
-                        if (offhand.getType() != Material.AIR
-                            && offhand.getType().isBlock()
-                            && materialIsValid(offhand.getType())
-                        ) {
-                            block.setType(offhand.getType());
-                            e.getItem().setAmount(e.getItem().getAmount() - 1);
-                        }
+                        applyCover(e.getItem(), offhand, block);
+                        return;
+                    }
+                }
+
+                for (String itemId : this.itemIdsToCover) {
+                    if (itemId.equals(slimefunItem.getId())) {
+                        applyCover(e.getItem(), offhand, block);
                         return;
                     }
                 }
             }
         };
+    }
+
+    @ParametersAreNonnullByDefault
+    private void applyCover(ItemStack coverItem, ItemStack offhand, Block block) {
+        if (offhand.getType() != Material.AIR
+            && offhand.getType().isBlock()
+            && materialIsValid(offhand.getType())
+        ) {
+            block.setType(offhand.getType());
+            coverItem.setAmount(coverItem.getAmount() - 1);
+        }
     }
 
     @ParametersAreNonnullByDefault

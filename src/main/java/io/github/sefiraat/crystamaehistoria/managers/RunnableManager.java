@@ -4,27 +4,40 @@ import io.github.sefiraat.crystamaehistoria.CrystamaeHistoria;
 import io.github.sefiraat.crystamaehistoria.runnables.ParticleDisplayRunnable;
 import io.github.sefiraat.crystamaehistoria.runnables.SaveConfigRunnable;
 import io.github.sefiraat.crystamaehistoria.runnables.TemporaryEffectsRunnable;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lombok.Getter;
 
 public class RunnableManager {
 
     @Getter
-    public final TemporaryEffectsRunnable temporaryEffectsRunnable;
+    private final TemporaryEffectsRunnable temporaryEffectsRunnable;
     @Getter
-    public final SaveConfigRunnable saveConfigRunnable;
+    private final SaveConfigRunnable saveConfigRunnable;
     @Getter
-    public final ParticleDisplayRunnable particleDisplayRunnable;
+    private final ParticleDisplayRunnable particleDisplayRunnable;
+
+    private final ScheduledTask temporaryEffectsTask;
+    private final ScheduledTask saveConfigTask;
+    private final ScheduledTask particleDisplayTask;
 
     public RunnableManager() {
-        CrystamaeHistoria plugin = CrystamaeHistoria.getInstance();
+        final CrystamaeHistoria plugin = CrystamaeHistoria.getInstance();
 
         this.temporaryEffectsRunnable = new TemporaryEffectsRunnable();
-        this.temporaryEffectsRunnable.runTaskTimer(plugin, 1, 20);
-
         this.saveConfigRunnable = new SaveConfigRunnable();
-        this.saveConfigRunnable.runTaskTimer(plugin, 1, 12000);
-
         this.particleDisplayRunnable = new ParticleDisplayRunnable();
-        this.particleDisplayRunnable.runTaskTimer(plugin, 1, 80);
+
+        this.temporaryEffectsTask = plugin.getServer().getGlobalRegionScheduler()
+            .runAtFixedRate(plugin, task -> temporaryEffectsRunnable.run(), 1L, 20L);
+        this.saveConfigTask = plugin.getServer().getGlobalRegionScheduler()
+            .runAtFixedRate(plugin, task -> saveConfigRunnable.run(), 1L, 12000L);
+        this.particleDisplayTask = plugin.getServer().getGlobalRegionScheduler()
+            .runAtFixedRate(plugin, task -> particleDisplayRunnable.run(), 1L, 80L);
+    }
+
+    public void shutdown() {
+        temporaryEffectsTask.cancel();
+        saveConfigTask.cancel();
+        particleDisplayTask.cancel();
     }
 }

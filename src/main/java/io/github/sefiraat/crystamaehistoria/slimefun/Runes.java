@@ -316,7 +316,7 @@ public class Runes {
             RecipeType.ANCIENT_ALTAR,
             new ItemStack[]{
                 CrystaStacks.LUMINESCENCE_SCOOP, new ItemStack(Material.LIGHTNING_ROD), SlimefunItems.LIGHTNING_RUNE,
-                new ItemStack(Material.CHAIN), CrystaStacks.ARCANE_SIGIL, new ItemStack(Material.CHAIN),
+                new ItemStack(Material.IRON_CHAIN), CrystaStacks.ARCANE_SIGIL, new ItemStack(Material.IRON_CHAIN),
                 SlimefunItems.LIGHTNING_RUNE, new ItemStack(Material.LIGHTNING_ROD), CrystaStacks.LUMINESCENCE_SCOOP
             }
         );

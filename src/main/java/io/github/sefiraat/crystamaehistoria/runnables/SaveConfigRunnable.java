@@ -1,9 +1,8 @@
 package io.github.sefiraat.crystamaehistoria.runnables;
 
 import io.github.sefiraat.crystamaehistoria.CrystamaeHistoria;
-import org.bukkit.scheduler.BukkitRunnable;
 
-public class SaveConfigRunnable extends BukkitRunnable {
+public class SaveConfigRunnable implements Runnable {
 
     @Override
     public void run() {

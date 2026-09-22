@@ -42,13 +42,26 @@ public class MagicSummon {
         CrystamaeHistoria.getSummonedEntityMap().remove(this);
         Mob mob = (Mob) Bukkit.getEntity(mobUUID);
         if (mob != null) {
-            mob.remove();
+            mob.getScheduler().execute(
+                CrystamaeHistoria.getInstance(),
+                mob::remove,
+                null,
+                1L
+            );
         }
     }
 
     public void run() {
         if (tickConsumer != null) {
-            tickConsumer.accept(this);
+            final Mob mob = getMob();
+            if (mob != null) {
+                mob.getScheduler().execute(
+                    CrystamaeHistoria.getInstance(),
+                    () -> tickConsumer.accept(this),
+                    null,
+                    1L
+                );
+            }
         }
     }
 }

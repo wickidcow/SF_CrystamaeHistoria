@@ -63,7 +63,7 @@ public abstract class Spell {
         );
         ItemMeta itemMeta = stack.getItemMeta();
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         stack.setItemMeta(itemMeta);
         return stack;
     }
@@ -118,7 +118,7 @@ public abstract class Spell {
 
         final SpellTickRunnable ticker = new SpellTickRunnable(castInformation, tickAmount);
         CrystamaeHistoria.getSpellMemory().getTickingCastables().put(ticker, tickAmount);
-        ticker.runTaskTimer(CrystamaeHistoria.getInstance(), 0, period);
+        ticker.start(period);
     }
 
     @ParametersAreNonnullByDefault

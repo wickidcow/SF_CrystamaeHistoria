@@ -115,7 +115,7 @@ public class MainFlexGroup extends FlexItemGroup {
             final TextComponent link = Component.text()
                 .content("To access the documentation Wiki, please click here")
                 .color(TextColor.color(175, 200, 60))
-                .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, "https://sefiraat.dev/"))
+                .clickEvent(ClickEvent.openUrl("https://sefiraat.dev/"))
                 .build();
             player1.sendMessage(link);
             return false;
