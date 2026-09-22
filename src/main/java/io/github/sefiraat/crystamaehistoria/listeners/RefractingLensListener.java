@@ -13,7 +13,7 @@ import io.github.sefiraat.crystamaehistoria.utils.ParticleUtils;
 import io.github.sefiraat.crystamaehistoria.utils.Skulls;
 import io.github.sefiraat.crystamaehistoria.utils.theme.ThemeType;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -100,7 +100,7 @@ public class RefractingLensListener implements Listener {
         final DisplayItem displayItem = new DisplayItem(
             itemStack,
             location.clone().add(0.5, 1, 0.5),
-            ChatColor.GREEN + String.valueOf(volume),
+            ThemeType.legacyColor(NamedTextColor.GREEN) + volume,
             item -> {
                 Particle.DustOptions dustOptions = new Particle.DustOptions(Color.GREEN, 1);
                 ParticleUtils.displayParticleEffect(item, 0.3, 4, dustOptions);
@@ -117,7 +117,7 @@ public class RefractingLensListener implements Listener {
         final DisplayItem displayItem = new DisplayItem(
             itemStack,
             location.clone().add(0.5, 1.5, 0.5),
-            ChatColor.LIGHT_PURPLE + String.valueOf(volume),
+            ThemeType.legacyColor(NamedTextColor.LIGHT_PURPLE) + volume,
             item -> {
                 Particle.DustOptions dustOptions = new Particle.DustOptions(Color.PURPLE, 1);
                 ParticleUtils.displayParticleEffect(item, 0.3, 4, dustOptions);
