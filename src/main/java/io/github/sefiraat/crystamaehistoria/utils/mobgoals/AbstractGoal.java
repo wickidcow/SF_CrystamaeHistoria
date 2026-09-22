@@ -36,6 +36,7 @@ public abstract class AbstractGoal<T extends Mob> implements Goal<T> {
         this.owner = owningPlayer;
     }
 
+    @SuppressWarnings("unchecked")
     public void setSelf(T self) {
         this.self = self;
         Class<T> clazz = (Class<T>) self.getClass();
