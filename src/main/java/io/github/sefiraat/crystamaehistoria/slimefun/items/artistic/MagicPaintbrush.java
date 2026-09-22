@@ -35,8 +35,7 @@ public interface MagicPaintbrush {
         }
         potionMeta.addItemFlags(
             ItemFlag.HIDE_ENCHANTS,
-            ItemFlag.HIDE_ATTRIBUTES,
-            ItemFlag.HIDE_ADDITIONAL_TOOLTIP
+            ItemFlag.HIDE_ATTRIBUTES
         );
         itemStack.setItemMeta(potionMeta);
         return itemStack;
