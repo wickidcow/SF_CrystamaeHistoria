@@ -10,7 +10,7 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import lombok.Getter;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import com.xzavier0722.mc.plugin.slimefun4.storage.util.StorageCacheUtils;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import org.bukkit.Color;
@@ -62,9 +62,12 @@ public class LiquefactionBasin extends TickingMenuBlock {
             @Override
             public void onPlayerPlace(@Nonnull BlockPlaceEvent event) {
                 final Location location = event.getBlockPlaced().getLocation();
-                final LiquefactionBasinCache cache = new LiquefactionBasinCache(BlockStorage.getInventory(location), maxVolume);
-                cache.setActivePlayer(event.getPlayer());
-                cacheMap.put(location, cache);
+                final BlockMenu menu = SlimefunStorageUtils.getMenu(location);
+                if (menu != null) {
+                    final LiquefactionBasinCache cache = new LiquefactionBasinCache(menu, maxVolume);
+                    cache.setActivePlayer(event.getPlayer());
+                    cacheMap.put(location, cache);
+                }
             }
         };
     }
