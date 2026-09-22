@@ -8,7 +8,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import lombok.Getter;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,7 +43,7 @@ public class MobCandle extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onFirstTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         Long expiry = Long.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "EXPIRY"));
         expiryMap.put(block.getLocation(), expiry);
         Candle candle = (Candle) block.getBlockData();
@@ -57,7 +57,7 @@ public class MobCandle extends TickingBlockNoGui {
     }
 
     @Override
-    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull Config config) {
+    protected void onTick(@Nonnull Block block, @Nonnull SlimefunItem slimefunItem, @Nonnull SlimefunBlockData config) {
         Location location = block.getLocation();
         BoundingBox boundingBox = new BoundingBox(
             location.getX() - radius,
