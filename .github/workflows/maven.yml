@@ -43,13 +43,13 @@ jobs:
           grep -Fq 'folia-supported: true' src/main/resources/plugin.yml
 
       - name: Verify Paper/Purpur/Leaf 1.21.11 compilation
-        run: mvn --batch-mode --no-transfer-progress -DskipTests -Dpaper.version=1.21.11-R0.1-SNAPSHOT clean package
+        run: mvn --batch-mode --no-transfer-progress -DskipTests -Dpaper.version=1.21.11-R0.1-SNAPSHOT clean compile
 
       - name: Verify Paper/Purpur/Leaf 26.2 compilation
-        run: mvn --batch-mode --no-transfer-progress -DskipTests "-Dpaper.version=[26.2.build,26.3)" clean package
+        run: mvn --batch-mode --no-transfer-progress -DskipTests "-Dpaper.version=[26.2.build,26.3)" clean compile
 
       - name: Verify Paper/Purpur/Leaf 26.3 compilation
-        run: mvn --batch-mode --no-transfer-progress -DskipTests -Dpaper.version=26.3-rc-3.build.1-alpha clean package
+        run: mvn --batch-mode --no-transfer-progress -DskipTests -Dpaper.version=26.3-rc-3.build.1-alpha clean compile
 
       - name: Build universal release JAR
         run: mvn --batch-mode --no-transfer-progress -DskipTests -Dpaper.version=1.21.11-R0.1-SNAPSHOT clean package
