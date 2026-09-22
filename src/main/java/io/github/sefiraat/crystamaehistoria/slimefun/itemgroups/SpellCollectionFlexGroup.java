@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 /**
  * @noinspection deprecation
  */
+@SuppressWarnings("deprecation")
 public class SpellCollectionFlexGroup extends FlexItemGroup {
 
     private static final int PAGE_SIZE = 36;
@@ -459,7 +460,7 @@ public class SpellCollectionFlexGroup extends FlexItemGroup {
                         final String negativeEffectMessage = MessageFormat.format(
                             "{0}{1}: {2}Power ({3}) - Duration ({4})",
                             color,
-                            TextUtils.toTitleCase(type.getName()),
+                            TextUtils.toTitleCase(type.getKey().getKey()),
                             passive,
                             pair.getFirstValue(),
                             pair.getSecondValue()
@@ -476,7 +477,7 @@ public class SpellCollectionFlexGroup extends FlexItemGroup {
                         final String positiveEffectMessage = MessageFormat.format(
                             "{0}{1}: {2}Power ({3}) - Duration ({4})",
                             color,
-                            TextUtils.toTitleCase(type.getName()),
+                            TextUtils.toTitleCase(type.getKey().getKey()),
                             passive,
                             pair.getFirstValue(),
                             pair.getSecondValue()
