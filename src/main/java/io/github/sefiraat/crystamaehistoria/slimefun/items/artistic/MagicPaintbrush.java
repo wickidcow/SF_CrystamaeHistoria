@@ -117,7 +117,7 @@ public interface MagicPaintbrush {
         ) {
             block.setType(profile.getMaterialConcrete());
             return true;
-        } else if (Tag.CARPETS.isTagged(material)
+        } else if (Tag.WOOL_CARPETS.isTagged(material)
             && block.getType() != profile.getMaterialCarpet()
         ) {
             block.setType(profile.getMaterialCarpet());
