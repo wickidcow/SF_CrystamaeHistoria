@@ -42,7 +42,7 @@ public class Hearthstone extends Spell {
     @ParametersAreNonnullByDefault
     public void afterAllTicks(CastInformation castInformation) {
         Player caster = Bukkit.getPlayer(castInformation.getCaster());
-        Location location = caster.getBedSpawnLocation();
+        Location location = caster.getRespawnLocation();
         if (location == null) {
             Location casterLocation = caster.getLocation();
             ParticleUtils.displayParticleEffect(casterLocation.add(casterLocation.getDirection()), Particle.ANGRY_VILLAGER, 1, 10);
