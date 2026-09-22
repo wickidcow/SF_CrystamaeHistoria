@@ -80,7 +80,12 @@ public class MagicProjectile {
         CrystamaeHistoria.getProjectileMap().remove(this);
         Projectile projectile = (Projectile) Bukkit.getEntity(projectileUUID);
         if (projectile != null) {
-            projectile.remove();
+            projectile.getScheduler().execute(
+                CrystamaeHistoria.getInstance(),
+                projectile::remove,
+                null,
+                1L
+            );
         }
     }
 
