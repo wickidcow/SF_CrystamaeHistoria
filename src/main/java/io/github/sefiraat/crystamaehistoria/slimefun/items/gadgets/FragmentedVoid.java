@@ -90,7 +90,7 @@ public class FragmentedVoid extends SlimefunItem {
                     final double yOffset = ThreadLocalRandom.current().nextDouble(-3, 3);
                     final double zOffset = ThreadLocalRandom.current().nextDouble(-3, 3);
                     final Location spawnLocation = location.clone().add(xOffset, yOffset, zOffset);
-                    final Vibration vibration = new Vibration(spawnLocation, new Vibration.Destination.BlockDestination(location), 20);
+                    final Vibration vibration = new Vibration(new Vibration.Destination.BlockDestination(location), 20);
 
                     location.getWorld().spawnParticle(Particle.VIBRATION, spawnLocation, 1, vibration);
                 }
