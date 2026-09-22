@@ -15,7 +15,7 @@ env:
   OUTPUT_NAME: "SF_CrystamaeHistoria1.0.0.jar"
 
 concurrency:
-  group: crystamaehistoria-${{ github.workflow }}-${{ github.ref }}
+  group: crystamaehistoria-${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
