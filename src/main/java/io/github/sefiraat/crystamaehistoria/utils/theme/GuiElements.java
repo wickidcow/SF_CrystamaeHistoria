@@ -6,7 +6,6 @@ import io.github.sefiraat.crystamaehistoria.utils.TextUtils;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import lombok.experimental.UtilityClass;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
@@ -21,27 +20,27 @@ public class GuiElements {
 
     public static final CustomItemStack MENU_BACKGROUND_INPUT = new CustomItemStack(
         Material.LIGHT_BLUE_STAINED_GLASS_PANE,
-        ChatColor.BLUE + "Input"
+        "\u00A79" + "Input"
     );
 
     public static final CustomItemStack MENU_STAVE_INPUT = new CustomItemStack(
         Material.LIGHT_BLUE_STAINED_GLASS_PANE,
-        ChatColor.BLUE + "Stave Input"
+        "\u00A79" + "Stave Input"
     );
 
     public static final CustomItemStack MENU_REMOVE_PLATES = new CustomItemStack(
         Material.ORANGE_STAINED_GLASS_PANE,
-        ChatColor.BLUE + "Remove Plates"
+        "\u00A79" + "Remove Plates"
     );
 
     public static final CustomItemStack MENU_SAVE_STAVE = new CustomItemStack(
         Material.GREEN_STAINED_GLASS_PANE,
-        ChatColor.BLUE + "Save Stave Config"
+        "\u00A79" + "Save Stave Config"
     );
 
     public static final CustomItemStack MENU_BACKGROUND_OUTPUT = new CustomItemStack(
         Material.ORANGE_STAINED_GLASS_PANE,
-        ChatColor.RED + "Output"
+        "\u00A7c" + "Output"
     );
 
     public static final CustomItemStack MENU_DIVIDER = new CustomItemStack(
@@ -91,7 +90,7 @@ public class GuiElements {
             Material.BARRIER,
             ThemeType.RESEARCH,
             TextUtils.toTitleCase(material.toString()),
-            MessageFormat.format("{0}{1}LOCKED", ThemeType.RESEARCH.getColor(), ChatColor.BOLD),
+            MessageFormat.format("{0}{1}LOCKED", ThemeType.RESEARCH.getColor(), "\u00A7l"),
             "This unique story is not yet",
             "unlocked.",
             "Stories are unlocked the first time",
@@ -105,7 +104,7 @@ public class GuiElements {
             Material.BARRIER,
             ThemeType.RESEARCH,
             TextUtils.toTitleCase(id),
-            MessageFormat.format("{0}{1}LOCKED", ThemeType.RESEARCH.getColor(), ChatColor.BOLD),
+            MessageFormat.format("{0}{1}LOCKED", ThemeType.RESEARCH.getColor(), "\u00A7l"),
             "This spell is not yet unlocked.",
             "Spells are unlocked the first time",
             "you charge a plate with it in the",
@@ -129,7 +128,7 @@ public class GuiElements {
             Material.BARRIER,
             ThemeType.RESEARCH,
             TextUtils.toTitleCase(material.toString()),
-            MessageFormat.format("{0}{1}LOCKED", ThemeType.RESEARCH.getColor(), ChatColor.BOLD),
+            MessageFormat.format("{0}{1}LOCKED", ThemeType.RESEARCH.getColor(), "\u00A7l"),
             "This block has not yet been gilded."
         );
     }
@@ -138,7 +137,7 @@ public class GuiElements {
     public static CustomItemStack getSpellSlotPane(SpellSlot spellSlot) {
         return new CustomItemStack(
             Material.RED_STAINED_GLASS_PANE,
-            ChatColor.GRAY + "Spell Slot : " + TextUtils.toTitleCase(spellSlot.name())
+            "\u00A77" + "Spell Slot : " + TextUtils.toTitleCase(spellSlot.name())
         );
     }
 
@@ -147,7 +146,7 @@ public class GuiElements {
         Material material = active ? Material.RED_STAINED_GLASS_PANE : Material.GREEN_STAINED_GLASS_PANE;
         return new CustomItemStack(
             material,
-            ChatColor.GRAY + "Set direction: " + blockFace.name()
+            "\u00A77" + "Set direction: " + blockFace.name()
         );
     }
 }
