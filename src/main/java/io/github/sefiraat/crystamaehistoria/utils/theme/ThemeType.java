@@ -6,7 +6,6 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.CustomItemStack;
 import lombok.Getter;
 import net.kyori.adventure.text.format.TextColor;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -19,86 +18,85 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Getter
 public enum ThemeType {
-    WARNING(ChatColor.YELLOW, "Warning"),
-    ERROR(ChatColor.RED, "Error"),
-    NOTICE(ChatColor.WHITE, "Notice"),
-    PASSIVE(ChatColor.GRAY, ""),
-    SUCCESS(ChatColor.GREEN, "Success"),
-    MAIN(ChatColor.of("#21588f"), "Crystamae Historia"),
-    CLICK_INFO(ChatColor.of("#e4ed32"), "Click here"),
-    RESEARCH(ChatColor.of("#a60e03"), "Research"),
-    CRAFTING(ChatColor.of("#dbcea9"), "Crafting Material"),
-    CRYSTAL(ChatColor.of("#dbcea9"), "Crystal"),
-    MACHINE(ChatColor.of("#3295a8"), "Machine"),
-    MECHANISM(ChatColor.of("#3295a8"), "Mechanism"),
-    GADGET(ChatColor.of("#8732a8"), "Gadget"),
-    EXALTED(ChatColor.of("#8732a8"), "Exalted"),
-    GUIDE(ChatColor.of("#444444"), "Guide"),
-    CHEST(ChatColor.of("#b89b1c"), "Chest"),
-    DROP(ChatColor.of("#bf307f"), "Rare Drop"),
-    BASE(ChatColor.of("#9e9e9e"), "Base Resource"),
-    MOLTEN_METAL(ChatColor.of("#21588f"), "Molten Metal"),
-    LIQUID(ChatColor.of("#65dbb4"), "Liquid"),
-    CAST(ChatColor.of("#ffe138"), "Cast"),
-    PART(ChatColor.of("#42c8f5"), "Part"),
-    TOOL(ChatColor.of("#c2fc03"), "Tool"),
-    STAVE(ChatColor.of("#c2fc03"), "Stave"),
-    ARMOUR(ChatColor.of("#c2fc03"), "Armour"),
-    INFO(ChatColor.of("#21588f"), "Information"),
-    MOD(ChatColor.of("#bf307f"), "Modification"),
-    PROP(ChatColor.of("#bf307f"), "Material Trait"),
-    SPELL(ChatColor.of("#bf307f"), "Spell"),
-    RUNE(ChatColor.of("#32a852"), "Rune"),
-    MULTIBLOCK(ChatColor.of("#ba12af"), "Multiblock"),
-    RARITY_COMMON(ChatColor.of("#dbdbdb"), "Common"),
-    RARITY_UNCOMMON(ChatColor.of("#97d16b"), "Uncommon"),
-    RARITY_RARE(ChatColor.of("#d1db5c"), "Rare"),
-    RARITY_EPIC(ChatColor.of("#b355d9"), "Epic"),
-    RARITY_MYTHICAL(ChatColor.of("#c42336"), "Mythical"),
-    RARITY_UNIQUE(ChatColor.of("#b35f12"), "Unique"),
-    TYPE_ELEMENTAL(ChatColor.of("#ba0000"), "Elemental"),
-    TYPE_MECHANICAL(ChatColor.of("#ba5d00"), "Mechanical"),
-    TYPE_ALCHEMICAL(ChatColor.of("#e5e81a"), "Alchemical"),
-    TYPE_HISTORICAL(ChatColor.of("#24e81a"), "Historical"),
-    TYPE_HUMAN(ChatColor.of("#201ae8"), "Human"),
-    TYPE_ANIMAL(ChatColor.of("#701ae8"), "Animal"),
-    TYPE_CELESTIAL(ChatColor.of("#ffffff"), "Celestial"),
-    TYPE_VOID(ChatColor.of("#222222"), "Void"),
-    TYPE_PHILOSOPHICAL(ChatColor.of("#4d4aa8"), "Philosophical"),
-    RANK_SPELL_APPRENTICE(ChatColor.of("#cdbfff"), "Apprentice"),
-    RANK_SPELL_MAGE(ChatColor.of("#b5a1ff"), "Mage"),
-    RANK_SPELL_WIZARD(ChatColor.of("#9d82ff"), "Wizard"),
-    RANK_SPELL_CONJURER(ChatColor.of("#8969ff"), "Conjurer"),
-    RANK_SPELL_SORCERER(ChatColor.of("#6f47ff"), "Sorcerer"),
-    RANK_SPELL_MAGI(ChatColor.of("#5729ff"), "Magi"),
-    RANK_SPELL_MASTER_MAGI(ChatColor.of("#3d08ff"), "Master Magi"),
-    RANK_SPELL_GRANDMASTER_MAGI(ChatColor.of("#6b08ff"), "Grandmaster Magi"),
-    RANK_STORY_PUPIL(ChatColor.of("#eeffa8"), "Pupil"),
-    RANK_STORY_STUDENT(ChatColor.of("#e7ff82"), "Student"),
-    RANK_STORY_RESEARCHER(ChatColor.of("#e0ff5e"), "Researcher"),
-    RANK_STORY_READER(ChatColor.of("#d8ff33"), "Reader"),
-    RANK_STORY_LECTURER(ChatColor.of("#ceff00"), "Lecturer"),
-    RANK_STORY_PROFESSOR(ChatColor.of("#99ff00"), "Professor"),
-    RANK_STORY_ADJUNCT_PROFESSOR(ChatColor.of("#6aff00"), "Adjunct Professor"),
-    RANK_STORY_EMERITUS_PROFESSOR(ChatColor.of("#33ff00"), "Emeritus Professor"),
-    RANK_BLOCK_UNKNOWN(ChatColor.of("#a8ffb1"), "Unknown"),
-    RANK_BLOCK_HEARD_OF(ChatColor.of("#87ff94"), "Heard-of"),
-    RANK_BLOCK_KNOWN(ChatColor.of("#66ff77"), "Known"),
-    RANK_BLOCK_DETAILED(ChatColor.of("#4dff60"), "Detailed"),
-    RANK_BLOCK_RESEARCHED(ChatColor.of("#29ff40"), "Researched"),
-    RANK_BLOCK_EXPERT_OF(ChatColor.of("#0fff29"), "Expert-of"),
-    RANK_BLOCK_MASTER_OF(ChatColor.of("#00db18"), "Master-of"),
-    RANK_BLOCK_SME(ChatColor.of("#00820e"), "S.M.E."),
-    RANK_GILDING_NOVICE(ChatColor.of("#a8ffb1"), "Novice"),
-    RANK_GILDING_MEMBER(ChatColor.of("#87ff94"), "Member"),
-    RANK_GILDING_SECRETARY(ChatColor.of("#66ff77"), "Secretary"),
-    RANK_GILDING_OFFICER(ChatColor.of("#4dff60"), "Officer"),
-    RANK_GILDING_EXECUTIVE(ChatColor.of("#29ff40"), "Executive"),
-    RANK_GILDING_CHIEF(ChatColor.of("#0fff29"), "Chief"),
-    RANK_GILDING_MANAGER(ChatColor.of("#00db18"), "Manager"),
-    RANK_GILDING_OWNER(ChatColor.of("#00820e"), "Owner");
+    WARNING(TextColor.color(0xFFFF55), "Warning"),
+    ERROR(TextColor.color(0xFF5555), "Error"),
+    NOTICE(TextColor.color(0xFFFFFF), "Notice"),
+    PASSIVE(TextColor.color(0xAAAAAA), ""),
+    SUCCESS(TextColor.color(0x55FF55), "Success"),
+    MAIN(TextColor.color(0x21588F), "Crystamae Historia"),
+    CLICK_INFO(TextColor.color(0xE4ED32), "Click here"),
+    RESEARCH(TextColor.color(0xA60E03), "Research"),
+    CRAFTING(TextColor.color(0xDBCEA9), "Crafting Material"),
+    CRYSTAL(TextColor.color(0xDBCEA9), "Crystal"),
+    MACHINE(TextColor.color(0x3295A8), "Machine"),
+    MECHANISM(TextColor.color(0x3295A8), "Mechanism"),
+    GADGET(TextColor.color(0x8732A8), "Gadget"),
+    EXALTED(TextColor.color(0x8732A8), "Exalted"),
+    GUIDE(TextColor.color(0x444444), "Guide"),
+    CHEST(TextColor.color(0xB89B1C), "Chest"),
+    DROP(TextColor.color(0xBF307F), "Rare Drop"),
+    BASE(TextColor.color(0x9E9E9E), "Base Resource"),
+    MOLTEN_METAL(TextColor.color(0x21588F), "Molten Metal"),
+    LIQUID(TextColor.color(0x65DBB4), "Liquid"),
+    CAST(TextColor.color(0xFFE138), "Cast"),
+    PART(TextColor.color(0x42C8F5), "Part"),
+    TOOL(TextColor.color(0xC2FC03), "Tool"),
+    STAVE(TextColor.color(0xC2FC03), "Stave"),
+    ARMOUR(TextColor.color(0xC2FC03), "Armour"),
+    INFO(TextColor.color(0x21588F), "Information"),
+    MOD(TextColor.color(0xBF307F), "Modification"),
+    PROP(TextColor.color(0xBF307F), "Material Trait"),
+    SPELL(TextColor.color(0xBF307F), "Spell"),
+    RUNE(TextColor.color(0x32A852), "Rune"),
+    MULTIBLOCK(TextColor.color(0xBA12AF), "Multiblock"),
+    RARITY_COMMON(TextColor.color(0xDBDBDB), "Common"),
+    RARITY_UNCOMMON(TextColor.color(0x97D16B), "Uncommon"),
+    RARITY_RARE(TextColor.color(0xD1DB5C), "Rare"),
+    RARITY_EPIC(TextColor.color(0xB355D9), "Epic"),
+    RARITY_MYTHICAL(TextColor.color(0xC42336), "Mythical"),
+    RARITY_UNIQUE(TextColor.color(0xB35F12), "Unique"),
+    TYPE_ELEMENTAL(TextColor.color(0xBA0000), "Elemental"),
+    TYPE_MECHANICAL(TextColor.color(0xBA5D00), "Mechanical"),
+    TYPE_ALCHEMICAL(TextColor.color(0xE5E81A), "Alchemical"),
+    TYPE_HISTORICAL(TextColor.color(0x24E81A), "Historical"),
+    TYPE_HUMAN(TextColor.color(0x201AE8), "Human"),
+    TYPE_ANIMAL(TextColor.color(0x701AE8), "Animal"),
+    TYPE_CELESTIAL(TextColor.color(0xFFFFFF), "Celestial"),
+    TYPE_VOID(TextColor.color(0x222222), "Void"),
+    TYPE_PHILOSOPHICAL(TextColor.color(0x4D4AA8), "Philosophical"),
+    RANK_SPELL_APPRENTICE(TextColor.color(0xCDBFFF), "Apprentice"),
+    RANK_SPELL_MAGE(TextColor.color(0xB5A1FF), "Mage"),
+    RANK_SPELL_WIZARD(TextColor.color(0x9D82FF), "Wizard"),
+    RANK_SPELL_CONJURER(TextColor.color(0x8969FF), "Conjurer"),
+    RANK_SPELL_SORCERER(TextColor.color(0x6F47FF), "Sorcerer"),
+    RANK_SPELL_MAGI(TextColor.color(0x5729FF), "Magi"),
+    RANK_SPELL_MASTER_MAGI(TextColor.color(0x3D08FF), "Master Magi"),
+    RANK_SPELL_GRANDMASTER_MAGI(TextColor.color(0x6B08FF), "Grandmaster Magi"),
+    RANK_STORY_PUPIL(TextColor.color(0xEEFFA8), "Pupil"),
+    RANK_STORY_STUDENT(TextColor.color(0xE7FF82), "Student"),
+    RANK_STORY_RESEARCHER(TextColor.color(0xE0FF5E), "Researcher"),
+    RANK_STORY_READER(TextColor.color(0xD8FF33), "Reader"),
+    RANK_STORY_LECTURER(TextColor.color(0xCEFF00), "Lecturer"),
+    RANK_STORY_PROFESSOR(TextColor.color(0x99FF00), "Professor"),
+    RANK_STORY_ADJUNCT_PROFESSOR(TextColor.color(0x6AFF00), "Adjunct Professor"),
+    RANK_STORY_EMERITUS_PROFESSOR(TextColor.color(0x33FF00), "Emeritus Professor"),
+    RANK_BLOCK_UNKNOWN(TextColor.color(0xA8FFB1), "Unknown"),
+    RANK_BLOCK_HEARD_OF(TextColor.color(0x87FF94), "Heard-of"),
+    RANK_BLOCK_KNOWN(TextColor.color(0x66FF77), "Known"),
+    RANK_BLOCK_DETAILED(TextColor.color(0x4DFF60), "Detailed"),
+    RANK_BLOCK_RESEARCHED(TextColor.color(0x29FF40), "Researched"),
+    RANK_BLOCK_EXPERT_OF(TextColor.color(0x0FFF29), "Expert-of"),
+    RANK_BLOCK_MASTER_OF(TextColor.color(0x00DB18), "Master-of"),
+    RANK_BLOCK_SME(TextColor.color(0x00820E), "S.M.E."),
+    RANK_GILDING_NOVICE(TextColor.color(0xA8FFB1), "Novice"),
+    RANK_GILDING_MEMBER(TextColor.color(0x87FF94), "Member"),
+    RANK_GILDING_SECRETARY(TextColor.color(0x66FF77), "Secretary"),
+    RANK_GILDING_OFFICER(TextColor.color(0x4DFF60), "Officer"),
+    RANK_GILDING_EXECUTIVE(TextColor.color(0x29FF40), "Executive"),
+    RANK_GILDING_CHIEF(TextColor.color(0x0FFF29), "Chief"),
+    RANK_GILDING_MANAGER(TextColor.color(0x00DB18), "Manager"),
+    RANK_GILDING_OWNER(TextColor.color(0x00820E), "Owner");
 
     /**
      * List of names to be given to ArmourStands, invisible but mods and Minimaps can see them :)
@@ -137,13 +135,30 @@ public enum ThemeType {
 
     @Getter
     private static final ThemeType[] cachedValues = values();
-    private final ChatColor color;
+    private final TextColor color;
     private final String loreLine;
 
-    ThemeType(ChatColor color, String loreLine) {
+    ThemeType(TextColor color, String loreLine) {
         this.color = color;
         this.loreLine = loreLine;
+    }
 
+    public String getColor() {
+        return legacyColor(color);
+    }
+
+    public String getLoreLine() {
+        return loreLine;
+    }
+
+    @Nonnull
+    public static String legacyColor(TextColor color) {
+        final String hex = String.format("%06x", color.value());
+        final StringBuilder builder = new StringBuilder("§x");
+        for (int i = 0; i < hex.length(); i++) {
+            builder.append('§').append(hex.charAt(i));
+        }
+        return builder.toString();
     }
 
     /**
@@ -281,19 +296,12 @@ public enum ThemeType {
 
     @Nonnull
     public Particle.DustOptions getDustOptions(float size) {
-        return new Particle.DustOptions(
-            Color.fromRGB(
-                color.getColor().getRed(),
-                color.getColor().getGreen(),
-                color.getColor().getBlue()
-            ),
-            size
-        );
+        return new Particle.DustOptions(Color.fromRGB(color.value()), size);
     }
 
     @Nonnull
     public TextColor getComponentColor() {
-        return TextColor.color(this.getColor().getColor().getRGB());
+        return color;
     }
 
 }
