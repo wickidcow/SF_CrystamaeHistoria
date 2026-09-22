@@ -10,7 +10,7 @@ import io.github.thebusybiscuit.slimefun4.core.handlers.BlockPlaceHandler;
 import lombok.Getter;
 import com.xzavier0722.mc.plugin.slimefun4.storage.controller.SlimefunBlockData;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import io.github.sefiraat.crystamaehistoria.utils.SlimefunStorageUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Enderman;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -41,7 +41,7 @@ public class EnderInhibitor extends SlimefunItem {
             @Override
             @ParametersAreNonnullByDefault
             public void onPlayerPlace(BlockPlaceEvent event) {
-                BlockStorage.addBlockInfo(event.getBlock(), "CH_UUID", event.getPlayer().getUniqueId().toString());
+                SlimefunStorageUtils.setData(event.getBlock().getLocation(), "CH_UUID", event.getPlayer().getUniqueId().toString());
             }
         };
     }
@@ -51,7 +51,7 @@ public class EnderInhibitor extends SlimefunItem {
             @Override
             @ParametersAreNonnullByDefault
             public void onPlayerBreak(BlockBreakEvent blockBreakEvent, ItemStack itemStack, List<ItemStack> list) {
-                BlockStorage.clearBlockInfo(blockBreakEvent.getBlock());
+                SlimefunStorageUtils.removeData(blockBreakEvent.getBlock().getLocation(), "CH_UUID");
             }
         };
     }
