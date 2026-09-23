@@ -86,14 +86,35 @@ jobs:
           archive: false
           if-no-files-found: error
 
-      - name: Publish tagged GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Check release publication state
+        id: release_state
+        if: startsWith(github.ref, 'refs/tags/v') || github.ref_name == github.event.repository.default_branch
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh release create "${GITHUB_REF_NAME}" "dist/${OUTPUT_NAME}" \
-            --repo "${GITHUB_REPOSITORY}" \
-            --title "${GITHUB_REF_NAME}" \
-            --generate-notes
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then TAG="${GITHUB_REF_NAME}"; else TAG="v${VERSION}"; fi
+          if gh release view "${TAG}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            echo "exists=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "exists=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Publish canonical GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v') || (github.ref_name == github.event.repository.default_branch && steps.release_state.outputs.exists == 'false')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then TAG="${GITHUB_REF_NAME}"; else TAG="v${VERSION}"; fi
+          if gh release view "${TAG}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            gh release upload "${TAG}" "dist/${OUTPUT_NAME}" --repo "${GITHUB_REPOSITORY}" --clobber
+          else
+            gh release create "${TAG}" "dist/${OUTPUT_NAME}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --target "${GITHUB_SHA}" \
+              --title "CrystamaeHistoria ${VERSION}" \
+              --generate-notes
+          fi
