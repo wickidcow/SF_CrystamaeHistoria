@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.sefiraat.crystamaehistoria</groupId>
   <artifactId>CrystamaeHistoria</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
   <name>CrystamaeHistoria</name>
   <description>Slimefun Legacy maintenance build for Minecraft 1.21.11 through 26.3.</description>
