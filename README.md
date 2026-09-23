@@ -19,7 +19,7 @@ Canonical output:
 
 `SF_CrystamaeHistoria1.0.0.jar`
 
-GitHub Actions publishes the raw JAR artifact directly, with no ZIP wrapper.
+GitHub Actions publishes the raw JAR artifact directly, with no ZIP wrapper. Version tags matching `v<version>` (for example `v1.0.0`) also create a GitHub Release and attach that same raw JAR.
 
 ## Velocity
 
@@ -27,7 +27,7 @@ Crystamae Historia is a backend Slimefun addon, not a Velocity proxy plugin. On 
 
 ## Folia
 
-Folia support is treated as a runtime requirement, not only a metadata flag. The maintenance work is auditing legacy Bukkit scheduler usage and region-thread-sensitive world/entity operations so those paths can be made safe before the compatibility claim is considered complete.
+Folia support is treated as a runtime requirement, not only a metadata flag. Legacy scheduler paths have been moved onto Paper's global, region, or entity schedulers where appropriate; live-server testing is still recommended for spell/entity-heavy paths.
 
 ## Build matrix
 
