@@ -70,6 +70,12 @@
           <filters>
             <filter><artifact>*:*</artifact><excludes><exclude>META-INF/MANIFEST.MF</exclude><exclude>META-INF/*.SF</exclude><exclude>META-INF/*.RSA</exclude><exclude>META-INF/*.DSA</exclude></excludes></filter>
             <filter><artifact>com.elmakers.mine.bukkit:EffectLib</artifact><excludes><exclude>plugin.yml</exclude></excludes></filter>
+            <filter>
+              <artifact>io.github.mooy1:InfinityLib</artifact>
+              <excludes>
+                <exclude>io/github/mooy1/infinitylib/common/Scheduler.class</exclude>
+              </excludes>
+            </filter>
           </filters>
         </configuration></execution></executions>
       </plugin>
