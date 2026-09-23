@@ -69,7 +69,7 @@ jobs:
           unzip -p "$JAR" plugin.yml | grep -Fq "api-version: '1.21.11'"
           unzip -p "$JAR" plugin.yml | grep -Fq 'folia-supported: true'
           javap -verbose -classpath "$JAR" io.github.sefiraat.crystamaehistoria.CrystamaeHistoria | grep -Fq 'major version: 65'
-          javap -c -classpath "$JAR" io.github.sefiraat.crystamaehistoria.libs.infinitylib.common.Scheduler > /tmp/crystamae-scheduler.txt
+          javap -c -classpath "$JAR" io.github.sefiraat.crystamaehistoria.infinitylib.common.Scheduler > /tmp/crystamae-scheduler.txt
           grep -Fq 'getGlobalRegionScheduler' /tmp/crystamae-scheduler.txt
           if grep -Fq 'Bukkit.getScheduler' /tmp/crystamae-scheduler.txt; then
             echo "Legacy BukkitScheduler call leaked into shaded InfinityLib Scheduler" >&2
