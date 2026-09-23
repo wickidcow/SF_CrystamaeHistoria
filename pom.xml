@@ -62,7 +62,7 @@
         <executions><execution><phase>package</phase><goals><goal>shade</goal></goals><configuration>
           <createDependencyReducedPom>false</createDependencyReducedPom>
           <relocations>
-            <relocation><pattern>io.github.mooy1.infinitylib</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.infinitylib</shadedPattern></relocation>
+            <relocation><pattern>io.github.mooy1.infinitylib</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.infinitylib</shadedPattern></relocation>
             <relocation><pattern>org.bstats</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.bstats</shadedPattern></relocation>
             <relocation><pattern>de.slikey</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.effectlib</shadedPattern></relocation>
             <relocation><pattern>com.jeff_media.morepersistentdatatypes</pattern><shadedPattern>io.github.sefiraat.crystamaehistoria.libs.morepersistentdatatypes</shadedPattern></relocation>
