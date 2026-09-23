@@ -107,7 +107,11 @@ public class SpellMemory {
     public void removeProjectiles(boolean forceRemoveAll) {
         Set<MagicProjectile> set = new HashSet<>(projectileMap.keySet());
         for (MagicProjectile magicProjectile : set) {
-            long expiry = projectileMap.get(magicProjectile).getSecondValue();
+            final Pair<CastInformation, Long> state = projectileMap.get(magicProjectile);
+            if (state == null) {
+                continue;
+            }
+            long expiry = state.getSecondValue();
             if (System.currentTimeMillis() > expiry || forceRemoveAll) {
                 magicProjectile.kill();
             }
@@ -117,7 +121,11 @@ public class SpellMemory {
     public void removeFallingBlocks(boolean forceRemoveAll) {
         Set<MagicFallingBlock> set = new HashSet<>(fallingBlockMap.keySet());
         for (MagicFallingBlock magicFallingBlock : set) {
-            long expiry = fallingBlockMap.get(magicFallingBlock).getSecondValue();
+            final Pair<CastInformation, Long> state = fallingBlockMap.get(magicFallingBlock);
+            if (state == null) {
+                continue;
+            }
+            long expiry = state.getSecondValue();
             if (System.currentTimeMillis() > expiry || forceRemoveAll) {
                 magicFallingBlock.kill();
             }
@@ -127,7 +135,10 @@ public class SpellMemory {
     public void removeEntities(boolean forceRemoveAll) {
         Set<MagicSummon> set = new HashSet<>(CrystamaeHistoria.getSummonedEntityMap().keySet());
         for (MagicSummon magicSummon : set) {
-            long expiry = summonedEntities.get(magicSummon);
+            final Long expiry = summonedEntities.get(magicSummon);
+            if (expiry == null) {
+                continue;
+            }
             if (System.currentTimeMillis() > expiry || magicSummon.getMob() == null || forceRemoveAll) {
                 magicSummon.kill();
             } else {
