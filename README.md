@@ -6,7 +6,7 @@ Crystamae Historia adds magical stories, crystals, mechanisms, gadgets, staves a
 
 ## Compatibility target
 
-- Slimefun Legacy **4.1.58+**
+- Slimefun Legacy **4.1.58+** (current development target: **4.1.60**)
 - Minecraft **1.21.11 through 26.3**
 - Paper, Purpur and Leaf
 - Folia compatibility target
