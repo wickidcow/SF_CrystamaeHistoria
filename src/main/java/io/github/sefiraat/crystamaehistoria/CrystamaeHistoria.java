@@ -37,11 +37,8 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.collections.Pair;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.AdvancedPie;
 import org.bukkit.plugin.PluginManager;
-import org.checkerframework.checker.units.qual.N;
-
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -59,7 +56,7 @@ public class CrystamaeHistoria extends AbstractAddon {
     private SupportedPluginManager supportedPluginManager;
 
     public CrystamaeHistoria() {
-        super("Sefiraat", "CrystamaeHistoria", "master", "auto-update");
+        super("wickidcow", "SF_CrystamaeHistoria", "master", "auto-update");
     }
 
     public static CrystamaeHistoria getInstance() {
