@@ -156,7 +156,16 @@ public class CrystamaeHistoria extends AbstractAddon {
         getLogger().info("    Crystamae Historia - By Sefiraat    ");
         getLogger().info("########################################");
 
-        this.configManager = new ConfigManager();
+        try {
+  this.configManager = new ConfigManager();
+        } catch (RuntimeException failure) {
+  // InfinityLib catches enable exceptions without disabling the plugin.
+  // Stop explicitly before any addon services or items can use incomplete data.
+  getLogger().log(java.util.logging.Level.SEVERE,
+      "CrystamaeHistoria stopped: managed data could not be loaded safely.", failure);
+  getServer().getPluginManager().disablePlugin(this);
+  return;
+        }
         this.storiesManager = new StoriesManager();
         this.listenerManager = new ListenerManager();
         this.spellMemory = new SpellMemory();
@@ -225,6 +234,11 @@ public class CrystamaeHistoria extends AbstractAddon {
 
     @Override
     protected void disable() {
+        // A rejected data load must not initialize caches or write an empty replacement.
+        if (configManager == null) {
+            instance = null;
+            return;
+        }
         if (runnableManager != null) {
             runnableManager.shutdown();
         }
@@ -233,7 +247,9 @@ public class CrystamaeHistoria extends AbstractAddon {
             cache.shutdown();
         }
 
-        spellMemory.clearAll();
+        if (spellMemory != null) {
+            spellMemory.clearAll();
+        }
         configManager.saveAll();
         instance = null;
     }

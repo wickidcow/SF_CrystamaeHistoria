@@ -55,8 +55,17 @@ jobs:
       - name: Verify Paper/Purpur/Leaf 26.3 compilation
         run: mvn --batch-mode --no-transfer-progress -DskipTests "-Dpaper.version=[26.3.build,26.4)" clean compile
 
-      - name: Build universal release JAR
-        run: mvn --batch-mode --no-transfer-progress -DskipTests -Dpaper.version=1.21.11-R0.1-SNAPSHOT clean package
+      - name: Verify persisted data startup boundary
+        run: python3 scripts/verify_persisted_data_safety.py
+      - name: Build and test universal release JAR
+        run: mvn --batch-mode --no-transfer-progress -Dpaper.version=1.21.11-R0.1-SNAPSHOT clean package
+      - name: Retain persisted data regression results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: persisted-data-test-evidence
+          path: target/surefire-reports/TEST-*.xml
+          if-no-files-found: warn
 
       - name: Verify and stage raw JAR
         shell: bash
