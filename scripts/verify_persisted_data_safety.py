@@ -8,6 +8,8 @@ startup = main.split('public void enable() {', 1)[1].split('protected void disab
 load = startup.index('this.configManager = new ConfigManager();')
 for step in ['new StoriesManager()', 'new ListenerManager()', 'new SpellMemory()', 'new RunnableManager()', 'setupSlimefun();']:
     assert load < startup.index(step), step
+assert 'getServer().getPluginManager().disablePlugin(this);' in startup
+assert startup.index('disablePlugin(this);') < startup.index('new StoriesManager()')
 shutdown = main.split('protected void disable() {', 1)[1].split('private void setupSlimefun()', 1)[0]
 assert shutdown.index('if (configManager == null)') < shutdown.index('ChroniclerPanel.getCaches()')
 assert 'if (spellMemory != null)' in shutdown
