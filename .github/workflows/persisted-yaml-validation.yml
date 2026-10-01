@@ -1,0 +1,117 @@
+name: Persisted YAML Preservation Validation
+on:
+  push:
+    branches: ['work/persisted-yaml-validation']
+    paths: ['.github/workflows/persisted-yaml-validation.yml']
+permissions:
+  contents: write
+  actions: read
+env:
+  MAVEN_OPTS: '--sun-misc-unsafe-memory-access=allow'
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        with:
+          repository: wickidcow/SF_DankTech2
+          ref: 1566348da2bb319aa178dd331e2ca2c4ca3d26ce
+          path: dank-source
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        with:
+          repository: wickidcow/Slimefun-Legacy
+          ref: 656f569327c1d7e706cb23604dba024ddbc17c54
+          path: tools
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        with:
+          ref: ce70ca959b8fdc25beb44b6203aa3b8aa9368174
+          path: old-source
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Apply reviewed source only and verify its exact hashes
+        run: |
+          set -euo pipefail
+          python3 .audit/apply_preservation.py
+          python3 scripts/verify_persisted_data_safety.py
+          git diff --check
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,shutil,subprocess
+          names=set(subprocess.check_output(['git','ls-files','-z']).decode().split('\0'))
+          names.update(json.loads(Path('preservation-evidence/reviewed-blobs.json').read_text()))
+          for name in names:
+              if not name or name.startswith('.audit/') or name=='.github/workflows/persisted-yaml-validation.yml':continue
+              src=Path(name)
+              if src.is_file():
+                  out=Path('candidate-source')/name;out.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(src,out)
+          PY
+      - name: Supply the verified exact Legacy core
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,io,subprocess,zipfile
+          out=Path('runtime-inputs');out.mkdir()
+          raw=subprocess.run(['gh','api','repos/wickidcow/Slimefun-Legacy/actions/artifacts/11133862255/zip'],check=True,capture_output=True,timeout=120).stdout
+          assert hashlib.sha256(raw).hexdigest()=='1c923b97938b3e6d642bfb0a3582091a9a8bb698e6c7069c9c92b0f2f939e7f1'
+          with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+              names=[n for n in archive.namelist() if n.endswith('.jar')];assert len(names)==1
+              (out/'core.jar').write_bytes(archive.read(names[0]))
+          PY
+      - name: Build the original and corrected source against the same core
+        run: |
+          set -euo pipefail
+          python3 tools/scripts/build_addon_against_slimefun.py old-source runtime-inputs/core.jar build/old 2>&1 | tee preservation-evidence/old-build.log
+          cp build/old/addon.jar runtime-inputs/old.jar
+          python3 tools/scripts/build_addon_against_slimefun.py candidate-source runtime-inputs/core.jar build/new 2>&1 | tee preservation-evidence/new-build.log
+          (cd build/new/project && mvn -B -Dpaper.version=1.21.11-R0.1-SNAPSHOT clean package) 2>&1 | tee preservation-evidence/tests.log
+          cp build/new/project/target/SF_CrystamaeHistoria1.0.1.jar runtime-inputs/new.jar
+          python3 tools/scripts/verify_addon_bytecode.py runtime-inputs/new.jar --expected-java 21
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET,zipfile
+          path=Path('build/new/project/target/surefire-reports/TEST-io.github.sefiraat.crystamaehistoria.managers.PersistentYamlFileTest.xml')
+          test=ET.parse(path).getroot()
+          assert test.get('tests')=='13' and all(test.get(k)=='0' for k in ['errors','failures','skipped']),test.attrib
+          with zipfile.ZipFile('runtime-inputs/new.jar') as jar:
+              assert not any(n.startswith('org/junit/') or 'PersistentYamlFileTest' in n for n in jar.namelist())
+          PY
+          sha256sum runtime-inputs/*.jar > preservation-evidence/input-sha256.txt
+      - name: Stage only the tested source blobs without moving branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json,subprocess
+          for name,expected in json.loads(Path('preservation-evidence/reviewed-blobs.json').read_text()).items():
+              data=Path(name).read_bytes();assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()==expected
+              result=subprocess.run(['gh','api','--method','POST','repos/wickidcow/SF_CrystamaeHistoria/git/blobs','--input','-'],input=json.dumps(dict(content=data.decode(),encoding='utf-8')),text=True,capture_output=True,check=True)
+              assert json.loads(result.stdout)['sha']==expected
+              out=Path('preservation-evidence/reviewed-source')/name;out.parent.mkdir(parents=True,exist_ok=True);out.write_bytes(data)
+          PY
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: crystamae-preservation-build-evidence
+          path: |
+            preservation-evidence/
+            build/new/project/target/surefire-reports/TEST-*.xml
+          include-hidden-files: true
+          retention-days: 14
+      - uses: actions/upload-artifact@v7
+        with:
+          name: crystamae-preservation-runtime-inputs
+          path: runtime-inputs/
+          retention-days: 14
