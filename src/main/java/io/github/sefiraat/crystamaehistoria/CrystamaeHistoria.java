@@ -225,6 +225,11 @@ public class CrystamaeHistoria extends AbstractAddon {
 
     @Override
     protected void disable() {
+        // A rejected data load must not initialize caches or write an empty replacement.
+        if (configManager == null) {
+            instance = null;
+            return;
+        }
         if (runnableManager != null) {
             runnableManager.shutdown();
         }
@@ -233,7 +238,9 @@ public class CrystamaeHistoria extends AbstractAddon {
             cache.shutdown();
         }
 
-        spellMemory.clearAll();
+        if (spellMemory != null) {
+            spellMemory.clearAll();
+        }
         configManager.saveAll();
         instance = null;
     }

@@ -11,11 +11,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.util.logging.Level;
 
 @Getter
 public class ConfigManager {
@@ -35,39 +39,39 @@ public class ConfigManager {
     }
 
     @Nonnull
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     private FileConfiguration getConfig(@Nonnull String fileName, boolean updateWithDefaults) {
         final CrystamaeHistoria plugin = CrystamaeHistoria.getInstance();
         final File file = new File(plugin.getDataFolder(), fileName);
-
         try {
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
+            if (Files.notExists(file.toPath(), LinkOption.NOFOLLOW_LINKS)) {
+                Files.createDirectories(file.toPath().getParent());
+                Files.createFile(file.toPath());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-        try {
-            configuration.load(file);
+            FileConfiguration configuration = PersistentYamlFile.load(file.toPath());
             if (updateWithDefaults) {
                 updateConfig(configuration, file, fileName);
             }
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            return configuration;
+        } catch (IOException | InvalidConfigurationException failure) {
+            throw new IllegalStateException("Unable to load " + fileName
+                + "; CrystamaeHistoria is stopping to protect existing progress and settings.", failure);
         }
-        return configuration;
     }
 
     @ParametersAreNonnullByDefault
-    private void updateConfig(FileConfiguration config, File file, String fileName) throws IOException {
-        final InputStream inputStream = CrystamaeHistoria.getInstance().getResource(fileName);
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        final YamlConfiguration defaults = YamlConfiguration.loadConfiguration(reader);
-        config.addDefaults(defaults);
-        config.options().copyDefaults(true);
-        config.save(file);
+    private void updateConfig(FileConfiguration config, File file, String fileName)
+        throws IOException, InvalidConfigurationException {
+        final InputStream input = CrystamaeHistoria.getInstance().getResource(fileName);
+        if (input == null) {
+            throw new IOException("Missing bundled defaults for " + fileName);
+        }
+        try (Reader reader = new InputStreamReader(input, StandardCharsets.UTF_8)) {
+            final YamlConfiguration defaults = new YamlConfiguration();
+            defaults.load(reader);
+            config.addDefaults(defaults);
+            config.options().copyDefaults(true);
+            PersistentYamlFile.save(config, file.toPath());
+        }
     }
 
     @ParametersAreNonnullByDefault
@@ -83,9 +87,10 @@ public class ConfigManager {
                 try {
                     final File file = new File(CrystamaeHistoria.getInstance().getDataFolder(), "spells.yml");
                     spells.set(spell.getId(), true);
-                    spells.save(file);
-                } catch (IOException exception) {
-                    exception.printStackTrace();
+                    PersistentYamlFile.save(spells, file.toPath());
+                } catch (IOException | RuntimeException exception) {
+                    CrystamaeHistoria.getInstance().getLogger().log(Level.SEVERE,
+                        "Unable to save spells.yml; the previous file was not intentionally truncated.", exception);
                 }
             }
             boolean enabled = spells.getBoolean(spell.getId());
@@ -105,9 +110,10 @@ public class ConfigManager {
     private void saveResearches() {
         File file = new File(CrystamaeHistoria.getInstance().getDataFolder(), "player_stats.yml");
         try {
-            playerStats.save(file);
-        } catch (IOException exception) {
-            exception.printStackTrace();
+            PersistentYamlFile.save(playerStats, file.toPath());
+        } catch (IOException | RuntimeException exception) {
+            CrystamaeHistoria.getInstance().getLogger().log(Level.SEVERE,
+                "Unable to save player_stats.yml; the previous file was not intentionally truncated.", exception);
         }
     }
 }
