@@ -1,0 +1,117 @@
+name: Explicit Initialization Refusal Validation
+on:
+  push:
+    branches: ['work/persisted-yaml-validation']
+    paths: ['.github/workflows/initialization-refusal-validation.yml']
+permissions:
+  contents: write
+  actions: read
+env:
+  MAVEN_OPTS: '--sun-misc-unsafe-memory-access=allow'
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: dfe5b99b7104c343b9469f938a2f66ed5b524d66
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        with:
+          repository: wickidcow/Slimefun-Legacy
+          ref: 656f569327c1d7e706cb23604dba024ddbc17c54
+          path: tools
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Apply the bounded startup guard without changing successful initialization
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          def blob(b):return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          main=Path('src/main/java/io/github/sefiraat/crystamaehistoria/CrystamaeHistoria.java')
+          assert blob(main.read_bytes())=='c89f185f604fcb7526f261cf7480dcd09513cbb9'
+          text=main.read_text();needle='        this.configManager = new ConfigManager();\n';assert text.count(needle)==1
+          replacement='''        try {
+                      this.configManager = new ConfigManager();
+                  } catch (RuntimeException failure) {
+                      // InfinityLib catches enable exceptions without disabling the plugin.
+                      // Stop explicitly before any addon services or items can use incomplete data.
+                      getLogger().log(java.util.logging.Level.SEVERE,
+                          "CrystamaeHistoria stopped: managed data could not be loaded safely.", failure);
+                      getServer().getPluginManager().disablePlugin(this);
+                      return;
+                  }
+          '''.replace('\n          ','\n')
+          main.write_text(text.replace(needle,replacement))
+          guard=Path('scripts/verify_persisted_data_safety.py')
+          assert blob(guard.read_bytes())=='df4436a22d759645afc5b5e8e88a979b88d55820'
+          text=guard.read_text();needle="shutdown = main.split('protected void disable() {', 1)[1].split('private void setupSlimefun()', 1)[0]"
+          assert text.count(needle)==1
+          addition="assert 'getServer().getPluginManager().disablePlugin(this);' in startup\nassert startup.index('disablePlugin(this);') < startup.index('new StoriesManager()')\n"
+          guard.write_text(text.replace(needle,addition+needle))
+          Path('guard-evidence').mkdir()
+          manifest={str(p):blob(p.read_bytes()) for p in [main,guard]}
+          Path('guard-evidence/reviewed-blobs.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          PY
+          python3 scripts/verify_persisted_data_safety.py
+          git diff --check
+      - name: Supply the same verified core and original JAR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,io,subprocess,zipfile
+          raw=subprocess.run(['gh','api','repos/wickidcow/SF_CrystamaeHistoria/actions/artifacts/11135660117/zip'],check=True,capture_output=True,timeout=120).stdout
+          assert hashlib.sha256(raw).hexdigest()=='dc1cbc96a6259b80e2cdc475af15285f15efe6a5fa5b80e20d8f161ae7d76a33'
+          out=Path('runtime-inputs');out.mkdir()
+          with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+              for name in ['core.jar','old.jar']:(out/name).write_bytes(archive.read(name))
+          PY
+      - name: Build and run all retained tests with strict compiler flags
+        run: |
+          set -euo pipefail
+          python3 tools/scripts/build_addon_against_slimefun.py . runtime-inputs/core.jar /tmp/crystamae-guard-build \
+            2>&1 | tee guard-evidence/preparation.log
+          (cd /tmp/crystamae-guard-build/project && mvn -B -Dpaper.version=1.21.11-R0.1-SNAPSHOT clean package) \
+            2>&1 | tee guard-evidence/full-build.log
+          cp /tmp/crystamae-guard-build/project/target/SF_CrystamaeHistoria1.0.1.jar runtime-inputs/new.jar
+          python3 tools/scripts/verify_addon_bytecode.py runtime-inputs/new.jar --expected-java 21
+          cp /tmp/crystamae-guard-build/project/target/surefire-reports/TEST-*.xml guard-evidence/
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          files=list(Path('guard-evidence').glob('TEST-*.xml'));assert len(files)==1
+          test=ET.parse(files[0]).getroot();assert test.get('tests')=='13' and all(test.get(k)=='0' for k in ['failures','errors','skipped'])
+          PY
+          sha256sum runtime-inputs/*.jar > guard-evidence/input-sha256.txt
+      - name: Stage only the two tested source blobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json,subprocess
+          for name,sha in json.loads(Path('guard-evidence/reviewed-blobs.json').read_text()).items():
+              data=Path(name).read_bytes();assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()==sha
+              result=subprocess.run(['gh','api','--method','POST','repos/wickidcow/SF_CrystamaeHistoria/git/blobs','--input','-'],input=json.dumps(dict(content=data.decode(),encoding='utf-8')),text=True,capture_output=True,check=True)
+              assert json.loads(result.stdout)['sha']==sha
+              out=Path('guard-evidence/reviewed-source')/name;out.parent.mkdir(parents=True,exist_ok=True);out.write_bytes(data)
+          PY
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: crystamae-explicit-guard-evidence
+          path: guard-evidence/
+          retention-days: 14
+      - uses: actions/upload-artifact@v7
+        with:
+          name: crystamae-explicit-guard-inputs
+          path: runtime-inputs/
+          retention-days: 14
