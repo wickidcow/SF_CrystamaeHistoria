@@ -1,5 +1,6 @@
 package io.github.sefiraat.crystamaehistoria.managers;
 
+import io.github.sefiraat.crystamaehistoria.stories.Story;
 import io.github.sefiraat.crystamaehistoria.stories.StoryMaterialResolver;
 import io.github.sefiraat.crystamaehistoria.stories.definition.StoryRarity;
 import org.bukkit.Material;
@@ -17,7 +18,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -99,6 +102,7 @@ class StoryMaterialsTest {
         var manager = load(blocks);
         assertEquals(blocks.getKeys(false).size(), manager.getBlockDefinitionMap().size());
         assertTrue(messages.stream().noneMatch(message -> message.contains("Ignoring")), messages.toString());
+        Map<String, Story> expectedById = new HashMap<>();
         for (String key : blocks.getKeys(false)) {
             var material = StoryMaterialResolver.resolve(key);
             assertNotNull(material, key);
@@ -107,8 +111,13 @@ class StoryMaterialsTest {
             var story = definition.getUnique();
             assertEquals(blocks.getString(key + ".story.name"), story.getId(), key);
             assertEquals(blocks.getStringList(key + ".story.lore"), story.getStoryStrings(), key);
-            assertSame(story, manager.getStory(story.getId(), StoryRarity.UNIQUE), key);
+            // Some bundled block variants already share story names. Preserve their
+            // existing last-definition lookup instead of inventing new saved IDs.
+            expectedById.put(story.getId(), story);
         }
+        assertEquals(expectedById.size(), manager.getStoryMapUnique().size());
+        expectedById.forEach((id, story) ->
+            assertSame(story, manager.getStory(id, StoryRarity.UNIQUE), id));
         assertEquals(before, blocks.saveToString());
         System.out.println("Verified " + manager.getBlockDefinitionMap().size()
             + " bundled block stories, including CHAIN, GRASS and SCUTE; no invalid-material skips.");
