@@ -46,14 +46,25 @@ jobs:
             test "${GITHUB_REF_NAME}" = "v${VERSION}"
           fi
 
-      - name: Verify Paper/Purpur/Leaf 1.21.11 compilation
-        run: mvn --batch-mode --no-transfer-progress -DskipTests -Dpaper.version=1.21.11-R0.1-SNAPSHOT clean compile
+      - name: Verify Paper/Purpur/Leaf 1.21.11 compilation and tests
+        run: |
+          mvn --batch-mode --no-transfer-progress -Dpaper.version=1.21.11-R0.1-SNAPSHOT clean test
+          mkdir -p evidence/1.21.11
+          cp target/surefire-reports/TEST-*.xml evidence/1.21.11/
 
-      - name: Verify Paper/Purpur/Leaf 26.2 compilation
-        run: mvn --batch-mode --no-transfer-progress -DskipTests "-Dpaper.version=[26.2.build,26.3)" clean compile
+      - name: Verify Paper/Purpur/Leaf 26.2 compilation and tests
+        run: |
+          mvn --batch-mode --no-transfer-progress -Dpaper.version=26.2.build.129-stable clean test
+          mkdir -p evidence/26.2
+          cp target/surefire-reports/TEST-*.xml evidence/26.2/
+          grep -Fq '/paper-api/26.2.build.129-stable/paper-api-26.2.build.129-stable.jar' evidence/26.2/TEST-io.github.sefiraat.crystamaehistoria.managers.StoryMaterialsTest.xml
 
-      - name: Verify Paper/Purpur/Leaf 26.3 compilation
-        run: mvn --batch-mode --no-transfer-progress -DskipTests "-Dpaper.version=[26.3.build,26.4)" clean compile
+      - name: Verify Paper/Purpur/Leaf 26.3 compilation and tests
+        run: |
+          mvn --batch-mode --no-transfer-progress -Dpaper.version=26.3.build.205-stable clean test
+          mkdir -p evidence/26.3
+          cp target/surefire-reports/TEST-*.xml evidence/26.3/
+          grep -Fq '/paper-api/26.3.build.205-stable/paper-api-26.3.build.205-stable.jar' evidence/26.3/TEST-io.github.sefiraat.crystamaehistoria.managers.StoryMaterialsTest.xml
 
       - name: Verify persisted data startup boundary
         run: python3 scripts/verify_persisted_data_safety.py
@@ -64,7 +75,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: persisted-data-test-evidence
-          path: target/surefire-reports/TEST-*.xml
+          path: |
+            evidence/**/TEST-*.xml
+            target/surefire-reports/TEST-*.xml
           if-no-files-found: warn
 
       - name: Verify and stage raw JAR
@@ -99,6 +112,16 @@ jobs:
           name: ${{ env.OUTPUT_NAME }}
           path: dist/${{ env.OUTPUT_NAME }}
           archive: false
+          if-no-files-found: error
+
+      - name: Upload downloadable JAR and verification bundle
+        uses: actions/upload-artifact@v7
+        with:
+          name: story-material-fix-package
+          path: |
+            dist/${{ env.OUTPUT_NAME }}
+            evidence/
+            target/surefire-reports/TEST-*.xml
           if-no-files-found: error
 
       - name: Check release publication state

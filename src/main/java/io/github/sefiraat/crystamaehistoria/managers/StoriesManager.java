@@ -5,6 +5,7 @@ import io.github.sefiraat.crystamaehistoria.CrystamaeHistoria;
 import io.github.sefiraat.crystamaehistoria.stories.BlockDefinition;
 import io.github.sefiraat.crystamaehistoria.stories.BlockTier;
 import io.github.sefiraat.crystamaehistoria.stories.Story;
+import io.github.sefiraat.crystamaehistoria.stories.StoryMaterialResolver;
 import io.github.sefiraat.crystamaehistoria.stories.definition.StoryChances;
 import io.github.sefiraat.crystamaehistoria.stories.definition.StoryRarity;
 import io.github.sefiraat.crystamaehistoria.stories.definition.StoryType;
@@ -28,10 +29,12 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class StoriesManager {
 
+    private final Logger logger;
     @Getter
     private final Map<Material, BlockDefinition> blockDefinitionMap = new EnumMap<>(Material.class);
     @Getter
@@ -50,9 +53,17 @@ public class StoriesManager {
     private final Map<String, Story> storyMapUnique = new HashMap<>();
 
     public StoriesManager() {
+        this(CrystamaeHistoria.getConfigManager().getStories(),
+            CrystamaeHistoria.getConfigManager().getBlocks(),
+            CrystamaeHistoria.getInstance().getLogger());
+    }
+
+    // The same loader can be exercised against real YAML fixtures without a live server.
+    StoriesManager(FileConfiguration stories, FileConfiguration blocks, Logger logger) {
+        this.logger = logger;
         fillBlockTierMap();
-        fillStories();
-        fillBlockDefinitions();
+        fillStories(stories);
+        fillBlockDefinitions(blocks);
     }
 
     private void fillBlockTierMap() {
@@ -138,9 +149,7 @@ public class StoriesManager {
         );
     }
 
-    private void fillStories() {
-        FileConfiguration stories = CrystamaeHistoria.getConfigManager().getStories();
-
+    private void fillStories(FileConfiguration stories) {
         ConfigurationSection common = stories.getConfigurationSection("COMMON");
         Preconditions.checkNotNull(common, "Common story configuration is not found, changed or deleted.");
         fillMap(storyMapCommon, common, StoryRarity.COMMON);
@@ -162,13 +171,12 @@ public class StoriesManager {
         fillMap(storyMapMythical, mythical, StoryRarity.MYTHICAL);
     }
 
-    private void fillBlockDefinitions() {
-        final FileConfiguration blocks = CrystamaeHistoria.getConfigManager().getBlocks();
+    private void fillBlockDefinitions(FileConfiguration blocks) {
         for (String key : blocks.getKeys(false)) {
             final ConfigurationSection wholeSection = blocks.getConfigurationSection(key);
 
             if (wholeSection == null) {
-                CrystamaeHistoria.getInstance().getLogger().info(
+                logger.info(
                     MessageFormat.format("Whole section missing for story -> {0}", key)
                 );
                 continue;
@@ -177,24 +185,24 @@ public class StoriesManager {
             final ConfigurationSection storySection = wholeSection.getConfigurationSection("story");
 
             if (storySection == null) {
-                CrystamaeHistoria.getInstance().getLogger().info(
+                logger.info(
                     MessageFormat.format("Ignoring a block with a missing story section -> {0}", key)
                 );
                 continue;
             }
 
             final String name = storySection.getString("name");
-            final Material material = Material.getMaterial(key);
+            final Material material = StoryMaterialResolver.resolve(key);
 
             if (name == null) {
-                CrystamaeHistoria.getInstance().getLogger().info(
+                logger.info(
                     MessageFormat.format("Ignoring a story without a name -> {0}", key)
                 );
                 continue;
             }
 
             if (material == null) {
-                CrystamaeHistoria.getInstance().getLogger().info(
+                logger.info(
                     MessageFormat.format("Ignoring a story with an invalid material -> {0}", key)
                 );
                 continue;
@@ -208,7 +216,7 @@ public class StoriesManager {
 
             for (StoryType storyType : types) {
                 if (storyType == null) {
-                    CrystamaeHistoria.getInstance().getLogger().info(
+                    logger.info(
                         MessageFormat.format("A block has a badly typed element -> {0}", key)
                     );
                 }
@@ -220,10 +228,16 @@ public class StoriesManager {
                 types,
                 story
             );
-            blockDefinitionMap.put(material, blockDefinition);
-            storyMapUnique.put(story.getId(), story);
+            // Owner-supplied current names take precedence over old bundled defaults,
+            // regardless of YAML order. Keep historical story IDs readable as well.
+            if (!blockDefinitionMap.containsKey(material) || key.equals(material.name())) {
+                blockDefinitionMap.put(material, blockDefinition);
+                storyMapUnique.put(story.getId(), story);
+            } else {
+                storyMapUnique.putIfAbsent(story.getId(), story);
+            }
         }
-        CrystamaeHistoria.getInstance().getLogger().info(
+        logger.info(
             MessageFormat.format("Loaded: {0} unique (block) stories.", blockDefinitionMap.size())
         );
     }
