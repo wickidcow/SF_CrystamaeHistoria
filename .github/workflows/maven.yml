@@ -54,15 +54,17 @@ jobs:
 
       - name: Verify Paper/Purpur/Leaf 26.2 compilation and tests
         run: |
-          mvn --batch-mode --no-transfer-progress "-Dpaper.version=[26.2.build,26.3)" clean test
+          mvn --batch-mode --no-transfer-progress -Dpaper.version=26.2.build.129-stable clean test
           mkdir -p evidence/26.2
           cp target/surefire-reports/TEST-*.xml evidence/26.2/
+          grep -Fq '/paper-api/26.2.build.129-stable/paper-api-26.2.build.129-stable.jar' evidence/26.2/TEST-io.github.sefiraat.crystamaehistoria.managers.StoryMaterialsTest.xml
 
       - name: Verify Paper/Purpur/Leaf 26.3 compilation and tests
         run: |
-          mvn --batch-mode --no-transfer-progress "-Dpaper.version=[26.3.build,26.4)" clean test
+          mvn --batch-mode --no-transfer-progress -Dpaper.version=26.3.build.205-stable clean test
           mkdir -p evidence/26.3
           cp target/surefire-reports/TEST-*.xml evidence/26.3/
+          grep -Fq '/paper-api/26.3.build.205-stable/paper-api-26.3.build.205-stable.jar' evidence/26.3/TEST-io.github.sefiraat.crystamaehistoria.managers.StoryMaterialsTest.xml
 
       - name: Verify persisted data startup boundary
         run: python3 scripts/verify_persisted_data_safety.py
