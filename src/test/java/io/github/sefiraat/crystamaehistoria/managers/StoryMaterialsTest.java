@@ -3,6 +3,7 @@ package io.github.sefiraat.crystamaehistoria.managers;
 import io.github.sefiraat.crystamaehistoria.stories.StoryMaterialResolver;
 import io.github.sefiraat.crystamaehistoria.stories.definition.StoryRarity;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -57,6 +58,18 @@ class StoryMaterialsTest {
             config.load(reader);
             return config;
         }
+    }
+
+    private static void copyChain(YamlConfiguration source, YamlConfiguration target, String key) {
+        var section = source.getConfigurationSection("CHAIN");
+        assertNotNull(section);
+        target.createSection(key);
+        // Do not share mutable MemorySection instances between the two test stories.
+        section.getValues(true).forEach((path, value) -> {
+            if (!(value instanceof ConfigurationSection)) {
+                target.set(key + "." + path, value);
+            }
+        });
     }
 
     @ParameterizedTest
@@ -135,9 +148,7 @@ class StoryMaterialsTest {
         var source = resource("blocks.yml");
         var blocks = new YamlConfiguration();
         for (String key : currentFirst ? List.of("IRON_CHAIN", "CHAIN") : List.of("CHAIN", "IRON_CHAIN")) {
-            var section = source.getConfigurationSection("CHAIN");
-            assertNotNull(section);
-            blocks.createSection(key, section.getValues(true));
+            copyChain(source, blocks, key);
             blocks.set(key + ".story.name", key + " saved story");
             blocks.set(key + ".story.lore", List.of(key + " owner lore"));
         }
@@ -154,9 +165,7 @@ class StoryMaterialsTest {
         var source = resource("blocks.yml");
         var blocks = new YamlConfiguration();
         for (String key : currentFirst ? List.of("IRON_CHAIN", "CHAIN") : List.of("CHAIN", "IRON_CHAIN")) {
-            var section = source.getConfigurationSection("CHAIN");
-            assertNotNull(section);
-            blocks.createSection(key, section.getValues(true));
+            copyChain(source, blocks, key);
             blocks.set(key + ".story.name", "Existing saved identity");
             blocks.set(key + ".story.lore", List.of(key + " owner lore"));
         }
@@ -170,10 +179,8 @@ class StoryMaterialsTest {
     @Test
     void invalidMaterialStillLogsAndDoesNotGetAnArbitraryFallback() throws Exception {
         var source = resource("blocks.yml");
-        var section = source.getConfigurationSection("CHAIN");
-        assertNotNull(section);
         var blocks = new YamlConfiguration();
-        blocks.createSection("NOT_A_MATERIAL", section.getValues(true));
+        copyChain(source, blocks, "NOT_A_MATERIAL");
         var manager = load(blocks);
         assertTrue(manager.getBlockDefinitionMap().isEmpty());
         assertTrue(manager.getStoryMapUnique().isEmpty());
