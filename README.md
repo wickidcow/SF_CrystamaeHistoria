@@ -17,9 +17,9 @@ Crystamae Historia adds magical stories, crystals, mechanisms, gadgets, staves a
 
 Canonical output:
 
-`SF_CrystamaeHistoria1.0.0.jar`
+`SF_CrystamaeHistoria1.0.2.jar`
 
-GitHub Actions publishes the raw JAR artifact directly, with no ZIP wrapper. Version tags matching `v<version>` (for example `v1.0.0`) also create a GitHub Release and attach that same raw JAR.
+GitHub Actions publishes the raw JAR artifact directly, with no ZIP wrapper. Version tags matching `v<version>` (for example `v1.0.2`) also create a GitHub Release and attach that same raw JAR.
 
 ## Velocity
 
