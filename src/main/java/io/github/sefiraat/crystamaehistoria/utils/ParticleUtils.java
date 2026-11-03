@@ -1,6 +1,7 @@
 package io.github.sefiraat.crystamaehistoria.utils;
 
 import lombok.experimental.UtilityClass;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
@@ -23,11 +24,13 @@ public class ParticleUtils {
 
     @ParametersAreNonnullByDefault
     public static void displayParticleEffect(Location location, Particle particle, double rangeRadius, int numberOfParticles) {
+        // FLASH requires Color on newer Paper versions; on 1.21.x it takes no data.
+        final Color data = particle.getDataType() == Color.class ? Color.WHITE : null;
         for (int i = 0; i < numberOfParticles; i++) {
             double x = ThreadLocalRandom.current().nextDouble(-rangeRadius, rangeRadius + 0.1);
             double y = ThreadLocalRandom.current().nextDouble(-rangeRadius, rangeRadius + 0.1);
             double z = ThreadLocalRandom.current().nextDouble(-rangeRadius, rangeRadius + 0.1);
-            location.getWorld().spawnParticle(particle, location.clone().add(x, y, z), 1);
+            location.getWorld().spawnParticle(particle, location.clone().add(x, y, z), 1, data);
         }
     }
 
