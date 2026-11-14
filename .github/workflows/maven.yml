@@ -133,6 +133,20 @@ jobs:
           cp "$JAR" "dist/${OUTPUT_NAME}"
           sha256sum "dist/${OUTPUT_NAME}"
 
+      - name: Native Paper 26.3 startup and restart with saved player progress
+        timeout-minutes: 12
+        run: >-
+          python3 scripts/verify_native_paper_restart.py
+          --plugin "dist/${OUTPUT_NAME}"
+          --core .ci/Slimefun-Legacy4.1.80.jar
+      - name: Retain native Paper startup and restart logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: paper-26.3-native-crystamae-restart
+          path: build/native-evidence/*.log
+          if-no-files-found: warn
+
       - name: Upload canonical raw JAR artifact
         uses: actions/upload-artifact@v7
         with:
