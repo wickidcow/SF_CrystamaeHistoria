@@ -15,6 +15,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <paper.version>1.21.11-R0.1-SNAPSHOT</paper.version>
     <slimefun.version>2025.1.2</slimefun.version>
+    <slimefun.groupId>com.github.SlimefunGuguProject</slimefun.groupId>
+    <slimefun.artifactId>Slimefun4</slimefun.artifactId>
   </properties>
 
   <repositories>
@@ -86,7 +88,7 @@
   <dependencies>
     <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><version>5.12.2</version><scope>test</scope></dependency>
     <dependency><groupId>io.papermc.paper</groupId><artifactId>paper-api</artifactId><version>${paper.version}</version><scope>provided</scope></dependency>
-    <dependency><groupId>com.github.SlimefunGuguProject</groupId><artifactId>Slimefun4</artifactId><version>${slimefun.version}</version><scope>provided</scope></dependency>
+    <dependency><groupId>${slimefun.groupId}</groupId><artifactId>${slimefun.artifactId}</artifactId><version>${slimefun.version}</version><scope>provided</scope></dependency>
     <dependency><groupId>org.bstats</groupId><artifactId>bstats-bukkit</artifactId><version>3.2.1</version></dependency>
     <dependency><groupId>com.google.code.findbugs</groupId><artifactId>annotations</artifactId><version>3.0.1u2</version><scope>provided</scope></dependency>
     <dependency><groupId>com.jeff-media</groupId><artifactId>MorePersistentDataTypes</artifactId><version>2.4.0</version></dependency>
