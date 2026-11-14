@@ -124,35 +124,25 @@ jobs:
             target/surefire-reports/TEST-*.xml
           if-no-files-found: error
 
-      - name: Check release publication state
-        id: release_state
-        if: startsWith(github.ref, 'refs/tags/v') || github.ref_name == github.event.repository.default_branch
+      # Ordinary branch builds produce artifacts only. Tag publishing must never
+      # overwrite or silently modify an already published release.
+      - name: Publish a new tagged release only
+        if: startsWith(github.ref, 'refs/tags/v')
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then TAG="${GITHUB_REF_NAME}"; else TAG="v${VERSION}"; fi
+          TAG="${GITHUB_REF_NAME}"
+          test "${TAG}" = "v${VERSION}"
+          JAR="dist/${OUTPUT_NAME}"
+          test -s "${JAR}"
           if gh release view "${TAG}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
-            echo "exists=true" >> "${GITHUB_OUTPUT}"
-          else
-            echo "exists=false" >> "${GITHUB_OUTPUT}"
+            echo "Refusing to modify existing published release ${TAG}" >&2
+            exit 1
           fi
-
-      - name: Publish canonical GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v') || (github.ref_name == github.event.repository.default_branch && steps.release_state.outputs.exists == 'false')
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then TAG="${GITHUB_REF_NAME}"; else TAG="v${VERSION}"; fi
-          if gh release view "${TAG}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
-            gh release upload "${TAG}" "dist/${OUTPUT_NAME}" --repo "${GITHUB_REPOSITORY}" --clobber
-          else
-            gh release create "${TAG}" "dist/${OUTPUT_NAME}" \
-              --repo "${GITHUB_REPOSITORY}" \
-              --target "${GITHUB_SHA}" \
-              --title "CrystamaeHistoria ${VERSION}" \
-              --generate-notes
-          fi
+          gh release create "${TAG}" "${JAR}" \
+            --repo "${GITHUB_REPOSITORY}" \
+            --target "${GITHUB_SHA}" \
+            --title "CrystamaeHistoria ${VERSION}" \
+            --generate-notes
