@@ -21,13 +21,26 @@ public class ArmourStandUtils {
         armorStand.setGravity(false);
         armorStand.setBasePlate(false);
         armorStand.setCustomNameVisible(false);
-        armorStand.setRemoveWhenFarAway(false);
+        setDistanceDespawn(armorStand, false);
         armorStand.setCollidable(false);
         armorStand.setInvulnerable(true);
         armorStand.setMarker(true);
         armorStand.setSilent(false);
         armorStand.customName(Component.text(ThemeType.getRandomEggName()));
         PersistentDataAPI.setBoolean(armorStand, Keys.PDC_IS_DISPLAY_STAND, true);
+    }
+
+    /**
+     * Retain Bukkit's distance-despawn policy without compiling against its deprecated setter.
+     * Entity#setPersistent is not an equivalent replacement for this setting.
+     */
+    private static void setDistanceDespawn(ArmorStand armorStand, boolean removeWhenFarAway) {
+        try {
+            ArmorStand.class.getMethod("setRemoveWhenFarAway", boolean.class)
+                    .invoke(armorStand, removeWhenFarAway);
+        } catch (ReflectiveOperationException exception) {
+            throw new IllegalStateException("Unable to preserve armor stand distance-despawn policy", exception);
+        }
     }
 
     @ParametersAreNonnullByDefault
