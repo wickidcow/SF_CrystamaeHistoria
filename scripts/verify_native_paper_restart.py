@@ -54,6 +54,34 @@ def download_pinned_paper(destination: Path) -> None:
         raise RuntimeError(f"Downloaded Paper checksum mismatch: {digest}")
 
 
+def compile_native_probe(root: Path, plugins: Path) -> None:
+    """Compile the CI-only armor-stand probe against the exact Paper 26.3 API."""
+    api_paths = list(Path.home().glob(
+        ".m2/repository/io/papermc/paper/paper-api/"
+        "26.3.build.205-stable/paper-api-26.3.build.205-stable.jar"
+    ))
+    if len(api_paths) != 1:
+        raise RuntimeError(f"Expected a single pinned Maven Paper 26.3 API JAR: {api_paths}")
+    classes = root / "probe-classes"
+    classes.mkdir()
+    source = Path("scripts/native_probe/NativeArmorStandProbe.java").resolve()
+    subprocess.run(
+        ["javac", "--release", "21", "-encoding", "UTF-8",
+         "-cp", str(api_paths[0]), "-d", str(classes), str(source)],
+        check=True
+    )
+    (classes / "plugin.yml").write_text(
+        "name: NativeArmorStandProbe\n"
+        "main: test.crystamae.NativeArmorStandProbe\n"
+        "version: '1.0'\n"
+        "api-version: '1.21.11'\n"
+        "depend: [CrystamaeHistoria]\n",
+        encoding="utf-8"
+    )
+    subprocess.run(["jar", "cf", str((plugins / "NativeArmorStandProbe.jar").resolve()), "."],
+                   cwd=classes, check=True)
+
+
 def run_server(workdir: Path, paper_jar: Path, evidence: Path, cycle: int) -> None:
     command = ["java", "-Xms512M", "-Xmx2G", "-jar", str(paper_jar), "nogui"]
     process = subprocess.Popen(
@@ -100,6 +128,8 @@ def run_server(workdir: Path, paper_jar: Path, evidence: Path, cycle: int) -> No
         raise RuntimeError(f"CrystamaeHistoria did not finish enabling on cycle {cycle}; tail:\n" + "".join(lines[-65:]))
     if "Error occurred while enabling CrystamaeHistoria" in output:
         raise RuntimeError(f"CrystamaeHistoria threw during enable on cycle {cycle}")
+    if "NATIVE_ARMORSTAND_POLICY_FAIL" in output or "NATIVE_ARMORSTAND_POLICY_PASS" not in output:
+        raise RuntimeError(f"Native Crystamae armor stand policy failed on cycle {cycle}; tail:\n" + "".join(lines[-75:]))
     print(f"Native Paper 26.3 cycle {cycle}: CrystamaeHistoria enabled and stopped cleanly")
 
 
@@ -123,6 +153,7 @@ def main() -> None:
         plugins.mkdir(parents=True)
         shutil.copyfile(plugin, plugins / "SF_CrystamaeHistoria.jar")
         shutil.copyfile(core, plugins / "Slimefun-Legacy.jar")
+        compile_native_probe(root, plugins)
         (workdir / "eula.txt").write_text("eula=true\n", encoding="ascii")
         (workdir / "server.properties").write_text(
             "online-mode=false\nserver-ip=127.0.0.1\n"
@@ -139,7 +170,8 @@ def main() -> None:
             if data.read_bytes() != original:
                 raise AssertionError(f"Existing player_stats.yml bytes changed on cycle {cycle}")
     print("PASS: native Paper 26.3 enabled CrystamaeHistoria twice; original player_stats.yml remains byte-exact")
-    print("LIMITATION: display stand creation, distance-despawn and saved-entity restart still need player/native acceptance")
+    print("PASS: native Crystamae display armor stand created with exact distance-despawn and display settings twice")
+    print("LIMITATION: real player Chronicler Panel display, long-range unloading, and persistent stand restart remain outstanding")
 
 
 if __name__ == "__main__":
