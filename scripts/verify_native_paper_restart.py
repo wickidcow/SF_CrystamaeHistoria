@@ -23,10 +23,10 @@ PAPER_SHA256 = "4c734aeb4da98845934af1e5481f0df7c80ad3ca50d272319ffe2b0e8a187c8a
 PAPER_API = "https://fill.papermc.io/v3/projects/paper/versions/26.3/builds"
 USER_AGENT = "SlimefunLegacyAddonValidation/1.0 (https://github.com/wickidcow/SF_CrystamaeHistoria)"
 PLAYER_STATS_FIXTURE = (
-    "# Existing player progress fixture; unknown owner fields must survive restart\\n"
-    "123e4567-e89b-12d3-a456-426614174000:\\n"
-    "  owner-custom-key: retain\\n"
-    "  count: 9223372036854775807\\n"
+    "# Existing player progress fixture; unknown owner fields must survive restart\n"
+    "123e4567-e89b-12d3-a456-426614174000:\n"
+    "  owner-custom-key: retain\n"
+    "  count: 9223372036854775807\n"
 )
 
 
